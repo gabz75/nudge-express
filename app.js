@@ -1,15 +1,28 @@
 'use strict';
 
-const express = require('express');
-const { sequelize } = require('./models');
-const Nudge = sequelize.models.Nudge ;
+import express from 'express'
+import { ApolloServer, gql } from 'apollo-server-express';
+
+import db from './models';
+import schema from './graphql/schema';
+import resolvers from './graphql/resolvers';
 
 // Constants
 const PORT = 3000;
 const HOST = '0.0.0.0';
+const Nudge = db.sequelize.models.Nudge ;
+
+// Apollo!
+const server = new ApolloServer({
+  typeDefs: gql(schema),
+  resolvers,
+  context: { db }
+});
 
 // App
 const app = express();
+
+server.applyMiddleware({ app });
 
 app.get('/nudges', (req, res) => {
   Nudge.findAll().then((nudges) => {

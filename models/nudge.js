@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const Nudge = sequelize.define('Nudge', {
     name: DataTypes.STRING,
     color: DataTypes.STRING,
