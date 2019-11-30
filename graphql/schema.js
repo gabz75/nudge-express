@@ -1,9 +1,15 @@
 export default `
+  scalar DateTime
+
+  directive @isAuthenticated on FIELD_DEFINITION
+
   type User {
     id: ID!
     name: String!
     email: String!
     nudges: [Nudge]
+    createdAt: DateTime
+    updatedAt: DateTime
   }
 
   type Nudge {
@@ -13,11 +19,13 @@ export default `
     archived: Boolean
     public: Boolean
     user: User!
+    createdAt: DateTime
+    updatedAt: DateTime
   }
 
   type Query {
-    getUsers: [User]
-    getNudges: [Nudge]
+    getUsers: [User] @isAuthenticated
+    getNudges: [Nudge] @isAuthenticated
   }
 `;
 

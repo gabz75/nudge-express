@@ -1,3 +1,5 @@
+import { GraphQLDateTime } from 'graphql-iso-date';
+
 export default {
   User: {
     nudges: (parent, args, context, info) => parent.getNudges(),
@@ -9,4 +11,5 @@ export default {
     getUsers: (parent, args, { db }, info) => db.User.findAll(),
     getNudges: (parent, args, { db }, info) => db.Nudge.findAll(),
   },
+  DateTime: GraphQLDateTime,
 }
