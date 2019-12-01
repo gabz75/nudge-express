@@ -1,6 +1,5 @@
 'use strict';
 
-import dotenv from 'dotenv';
 import express from 'express'
 import jwt from 'express-jwt';
 import { ApolloServer, gql } from 'apollo-server-express';
@@ -9,14 +8,13 @@ import db from './models';
 import schema from './graphql/schema';
 import resolvers from './graphql/resolvers';
 import schemaDirectives from './graphql/directives';
-
-dotenv.config();
+import { ENV } from './config';
 
 // App
 const app = express();
 
 const authMiddleware = jwt({
-    secret: process.env.JWT_ENCRYPTION,
+    secret: ENV.JWT_ENCRYPTION,
     credentialsRequired: false,
 });
 
@@ -52,7 +50,7 @@ app.get('/', (req, res) => {
   res.json({ code: 200, success: true, name: 'nudge-express', version: '0.0.1' });
 });
 
-app.listen(process.env.PORT, process.env.HOST);
+app.listen(ENV.PORT, ENV.HOST);
 
-console.log(`Running on http://${process.env.HOST}:${process.env.PORT}`);
+console.log(`Running on http://${ENV.HOST}:${ENV.PORT}`);
 

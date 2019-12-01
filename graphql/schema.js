@@ -8,6 +8,7 @@ export default `
     name: String!
     email: String!
     nudges: [Nudge]
+    jwt: String
     createdAt: DateTime
     updatedAt: DateTime
   }
@@ -27,11 +28,12 @@ export default `
     getUsers: [User] @isAuthenticated
     getNudges: [Nudge] @isAuthenticated
   }
+
+  type Mutation {
+     createUser(email: String, name: String, password: String): User
+     login(email: String, password: String): User
+   }
 `;
 
 
-// type Mutation {
-//    addUser(email: String, name: String, password: String): User
-//    addNudge(name: String!, color: String, public: Boolean, userId: ID!): Nudge
-//    updateNudge(id: ID!, name: String, color: String, archive: Boolean, public: Boolean): Nudge
-//  }
+
