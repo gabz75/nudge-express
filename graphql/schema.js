@@ -32,6 +32,9 @@ export default `
   type Mutation {
      createUser(email: String, name: String, password: String): User
      login(email: String, password: String): User
+     createNudge(name: String!, color: String, public: Boolean): Nudge @isAuthenticated
+     updateNudge(id: ID!, name: String, color: String, archived: Boolean, public: Boolean): Nudge @isAuthenticated
+     deleteNudge(id: ID!): Nudge @isAuthenticated
    }
 `;
 

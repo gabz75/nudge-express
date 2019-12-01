@@ -26,7 +26,31 @@ export default {
       }
 
       return user;
-    }
+    },
+    createNudge: (parent, args, { db, authenticatedUser }, info) => {
+      return db.Nudge.create({ ...args, UserId: authenticatedUser.id });
+    },
+    updateNudge: async (parent, args, { db, authenticatedUser }, info) => {
+      const { id, ...otherArgs } = args;
+
+      const nudge = await db.Nudge.findOne({where: { id: id, UserId: authenticatedUser.id }});
+
+       if (!nudge) {
+         throw new Error('No nudge found');
+       }
+
+      return nudge.update(otherArgs);
+    },
+    deleteNudge: async (parent, args, { db, authenticatedUser }, info) => {
+      const { id } = args;
+      const nudge = await db.Nudge.findOne({where: { id: id, UserId: authenticatedUser.id }});
+
+       if (!nudge) {
+         throw new Error('No nudge found');
+       }
+
+       return nudge.destroy();
+    },
   },
   DateTime: GraphQLDateTime,
-}
+};
