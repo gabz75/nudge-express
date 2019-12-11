@@ -27,6 +27,7 @@ export default `
   type Query {
     getUsers: [User] @isAuthenticated
     getNudges: [Nudge] @isAuthenticated
+    getNudge(id: ID!): Nudge @isAuthenticated
   }
 
   type Mutation {

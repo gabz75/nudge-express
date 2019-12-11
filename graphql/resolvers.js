@@ -10,7 +10,17 @@ export default {
   },
   Query: {
     getUsers: (parent, args, { db }, info) => db.User.findAll(),
-    getNudges: (parent, args, { db }, info) => db.Nudge.findAll(),
+    getNudges: (parent, args, { db }, info) => {
+
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(db.Nudge.findAll());
+        }, 0);
+      });
+    },
+    getNudge: (parent, { id }, { db, authenticatedUser }, info) => {
+      return db.Nudge.findOne({where: { id: id, UserId: authenticatedUser.id }});
+    },
   },
   Mutation: {
     createUser: (parent, args, { db }, info) => db.User.create(args),
