@@ -3,9 +3,9 @@ import crypto from 'crypto';
 
 import { ENV } from '../config';
 
-const generateSalt = () => crypto.randomBytes(16).toString('base64');
+export const generateSalt = () => crypto.randomBytes(16).toString('base64');
 
-const encryptPassword = (plainText, salt) => (
+export const encryptPassword = (plainText, salt) => (
   crypto
     .createHash('RSA-SHA256')
     .update(plainText)

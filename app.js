@@ -1,7 +1,9 @@
 import express from 'express';
 import jwt from 'express-jwt';
 
-import server from './server';
+import db from './models';
+import { createContext } from './server/apollo-server-context';
+import { createServer } from './server/create-server';
 import { ENV } from './config';
 
 // App
@@ -14,13 +16,8 @@ const authMiddleware = jwt({
 
 app.use(authMiddleware);
 
-app.use((err, req, res /* , next */) => {
-  if (err.name === 'UnauthorizedError') {
-    return res.status(401).json({ code: 401, success: false, message: `${err.name}: ${err.message}` });
-  }
-
-  return res.status(400).json({ code: 400, success: false, message: `${err.name}: ${err.message}` });
-});
+const context = createContext(db);
+const server = createServer(context);
 
 server.applyMiddleware({ app });
 

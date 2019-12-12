@@ -1,5 +1,6 @@
 import { SchemaDirectiveVisitor } from 'apollo-server-express';
 import { defaultFieldResolver } from 'graphql';
+import { UnauthorizedError } from 'express-jwt';
 
 
 class IsAuthenticatedDirective extends SchemaDirectiveVisitor {
@@ -12,17 +13,17 @@ class IsAuthenticatedDirective extends SchemaDirectiveVisitor {
       const { User } = context.db.sequelize.models;
 
       if (!jwtPayload) {
-        throw new Error('No JWT Payload');
+        throw new UnauthorizedError('missing_jwt', { message: 'Missing JWT in Authorization header' });
       }
 
       if (!jwtPayload.id) {
-        throw new Error('Missing `id` in JWT Payload');
+        throw new UnauthorizedError('invalid_jwt', { message: 'Invalid JWT' });
       }
 
       const authenticatedUser = await User.findByPk(jwtPayload.id);
 
       if (!authenticatedUser) {
-        throw new Error('No user found');
+        throw new UnauthorizedError('invalid_jwt', { message: 'Invalid JWT' });
       }
 
       // attach authenticatedUser to the context

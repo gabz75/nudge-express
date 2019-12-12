@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon --exec babel-node app.js",
-    "test": "yarn jest --watchAll --watchPathIgnorePatterns utils/*",
+    "test": "yarn jest --watchAll",
+    "prepare:test": "NODE_ENV=test yarn sequelize db:drop && yarn sequelize db:create && yarn sequelize db:migrate",
     "lint": "yarn eslint . -c .eslintrc.js"
   },
   "dependencies": {
@@ -13,6 +14,7 @@
     "@babel/core": "^7.7.4",
     "@babel/node": "^7.7.4",
     "@babel/preset-env": "^7.7.6",
+    "@babel/register": "^7.7.4",
     "@babel/runtime": "^7.7.6",
     "apollo-server-express": "^2.9.12",
     "dotenv": "^8.2.0",
