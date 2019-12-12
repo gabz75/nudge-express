@@ -7,13 +7,13 @@ export default `
     id: ID!
     name: String!
     email: String!
-    nudges: [Nudge]
+    goals: [Goal]
     jwt: String
     createdAt: DateTime
     updatedAt: DateTime
   }
 
-  type Nudge {
+  type Goal {
     id: ID!
     name: String!
     color: String
@@ -26,18 +26,15 @@ export default `
 
   type Query {
     getUsers: [User] @isAuthenticated
-    getNudges: [Nudge] @isAuthenticated
-    getNudge(id: ID!): Nudge @isAuthenticated
+    getGoals: [Goal] @isAuthenticated
+    getGoal(id: ID!): Goal @isAuthenticated
   }
 
   type Mutation {
-     createUser(email: String, name: String, password: String): User
+     createUser(email: String!, name: String!, password: String!): User
      login(email: String, password: String): User
-     createNudge(name: String!, color: String, public: Boolean): Nudge @isAuthenticated
-     updateNudge(id: ID!, name: String, color: String, archived: Boolean, public: Boolean): Nudge @isAuthenticated
-     deleteNudge(id: ID!): Nudge @isAuthenticated
+     createGoal(name: String!, color: String, public: Boolean): Goal @isAuthenticated
+     updateGoal(id: ID!, name: String, color: String, archived: Boolean, public: Boolean): Goal @isAuthenticated
+     deleteGoal(id: ID!): Goal @isAuthenticated
    }
 `;
-
-
-

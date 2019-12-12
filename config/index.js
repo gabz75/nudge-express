@@ -9,3 +9,5 @@ export const ENV = {
   JWT_ENCRYPTION: process.env.JWT_ENCRYPTION || 'secureKey',
   JWT_EXPIRATION: process.env.JWT_EXPIRATION || '1y',
 };
+
+export default ENV;

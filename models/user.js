@@ -3,17 +3,15 @@ import crypto from 'crypto';
 
 import { ENV } from '../config';
 
-const generateSalt = () => {
-  return crypto.randomBytes(16).toString('base64')
-};
+const generateSalt = () => crypto.randomBytes(16).toString('base64');
 
-const encryptPassword = (plainText, salt) =>{
-  return crypto
-      .createHash('RSA-SHA256')
-      .update(plainText)
-      .update(salt)
-      .digest('hex');
-}
+const encryptPassword = (plainText, salt) => (
+  crypto
+    .createHash('RSA-SHA256')
+    .update(plainText)
+    .update(salt)
+    .digest('hex')
+);
 
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
@@ -23,39 +21,39 @@ export default (sequelize, DataTypes) => {
     encryptedPasswordSalt: DataTypes.STRING,
   }, {
     setterMethods: {
-      password: function(value) {
+      password(value) {
         this.setDataValue('encryptedPassword', value);
-      }
-    }
+      },
+    },
   });
 
-  /** Class Methods **/
+  // Class Methods
 
-  User.associate = function(models) {
-    User.hasMany(models.Nudge);
+  User.associate = (models) => {
+    User.hasMany(models.Goal);
   };
 
-  /** Hooks **/
+  // Hooks
 
   const setSaltAndPassword = (user) => {
     if (user.changed('encryptedPassword')) {
-        user.encryptedPasswordSalt = generateSalt();
-        user.encryptedPassword = encryptPassword(user.encryptedPassword, user.encryptedPasswordSalt);
+      user.encryptedPasswordSalt = generateSalt();
+      user.encryptedPassword = encryptPassword(user.encryptedPassword, user.encryptedPasswordSalt);
     }
   };
 
   User.beforeCreate(setSaltAndPassword);
   User.beforeUpdate(setSaltAndPassword);
 
-  /** Instance Methods **/
+  // Instance Methods
 
-  User.prototype.getJWT = function() {
+  User.prototype.getJWT = function getJWT() {
     return jsonwebtoken.sign({ id: this.id }, ENV.JWT_ENCRYPTION, { expiresIn: ENV.JWT_EXPIRATION });
-  }
+  };
 
-  User.prototype.verifyPassword = function(password) {
+  User.prototype.verifyPassword = function verifyPassword(password) {
     return encryptPassword(password, this.encryptedPasswordSalt) === this.encryptedPassword;
-  }
+  };
 
   return User;
 };

@@ -1,15 +1,11 @@
-'use strict';
+export default {
+  up: async (queryInterface /* , Sequelize */) => {
+    const usersRow = await queryInterface.sequelize.query('SELECT id from Users;');
 
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-      const usersRow = await queryInterface.sequelize.query(
-        `SELECT id from Users;`
-      );
+    const primaryUserId = usersRow[0][0].id;
 
-      const primaryUserId = usersRow[0][0].id;
-
-      return queryInterface.bulkInsert(
-        'Nudges', [
+    return queryInterface.bulkInsert(
+      'Goals', [
         {
           name: 'Meditate',
           color: '#dedede',
@@ -100,10 +96,10 @@ module.exports = {
           updatedAt: new Date(),
           userId: primaryUserId,
         },
-       ], {});
+      ],
+      {},
+    );
   },
 
-  down: (queryInterface, Sequelize) => {
-      return queryInterface.bulkDelete('Nudges', null, {});
-  }
+  down: (queryInterface /* , Sequelize */) => queryInterface.bulkDelete('Goals', null, {}),
 };

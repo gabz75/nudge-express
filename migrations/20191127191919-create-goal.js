@@ -2,27 +2,24 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => (
-    queryInterface.createTable('Users', {
+    queryInterface.createTable('Goals', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      email: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
       name: {
         type: Sequelize.STRING,
       },
-      encryptedPassword: {
-        allowNull: false,
+      color: {
         type: Sequelize.STRING,
       },
-      encryptedPasswordSalt: {
-        allowNull: false,
-        type: Sequelize.STRING,
+      archived: {
+        type: Sequelize.BOOLEAN,
+      },
+      public: {
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
@@ -34,5 +31,5 @@ module.exports = {
       },
     })
   ),
-  down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('Users'),
+  down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('Goals'),
 };
