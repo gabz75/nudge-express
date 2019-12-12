@@ -1,16 +1,7 @@
-import toBeType from 'jest-tobetype'; // @todo:  refator and move to setupTest file
+import { setAuthenticatedUser } from '../../utils/apollo-server-context';
+import { useTestClient, db } from '../../utils/use-test-client';
 
-import { createTestClient } from 'apollo-server-testing';
-
-import db from '../../../models';
-import { createContext, setAuthenticatedUser } from '../../../server/apollo-server-context-testing';
-import { createServer } from '../../../server/create-server';
-
-expect.extend(toBeType); // @todo:  refator and move to setupTest file
-
-const context = createContext(db);
-const server = createServer(context);
-const { mutate } = createTestClient(server);
+const { mutate } = useTestClient();
 
 const mutation = `
   mutation($id: ID!, $name: String, $color: String, $public: Boolean, $archived: Boolean) {
@@ -28,7 +19,7 @@ const mutation = `
 
 let goal;
 
-beforeAll(async (done) => {
+beforeAll(async () => {
   const user = await db.sequelize.models.User.create({
     name: 'Gabe',
     email: 'gabriel@gmail.com',
@@ -43,8 +34,6 @@ beforeAll(async (done) => {
   });
 
   setAuthenticatedUser(user);
-
-  done();
 });
 
 describe('updateGoal', () => {
