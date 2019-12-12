@@ -18,9 +18,9 @@ const mutation = `
       id
       name
       email
+      jwt
       createdAt
       updatedAt
-      jwt
     }
   }
 `;
@@ -28,12 +28,7 @@ const mutation = `
 const variables = { name: 'Gabe', email: 'gabriel@gmail.com', password: 'qweqweqwe' };
 
 beforeAll(async () => {
-  await db.sequelize.models.User.destroy({ where: {}, force: true });
   await db.sequelize.models.User.create(variables);
-});
-
-afterAll(async () => {
-  await db.sequelize.models.User.destroy({ where: {}, force: true });
 });
 
 describe('login', () => {
@@ -42,29 +37,24 @@ describe('login', () => {
 
     const { data: { login } } = await mutate({ mutation, variables: { email, password } });
 
-    expect(login).toBeDefined();
+    expect(login).toBeTruthy();
     expect(login.id).toBeType('string');
-    expect(login.name).toBeDefined();
+    expect(login.name).toBeTruthy();
     expect(login.email).toBe(email);
-    expect(login.jwt).toBeDefined();
+    expect(login.jwt).toBeTruthy();
     expect(login.createdAt).toBeType('string');
     expect(login.updatedAt).toBeType('string');
   });
 
   test.skip('returns an error when password is missing', async () => {
-    const { email, password } = { ...variables, password: null };
+    const { errors } = await mutate({ mutation, variables: { ...variables, password: null } });
 
-    const res = await mutate({ mutation, variables: { email, password } });
-
-    expect(res.errors).toBeDefined();
+    expect(errors).toBeTruthy();
   });
 
   test('returns an error when email is missing', async () => {
-    const { email, password } = { ...variables, email: null };
+    const { errors } = await mutate({ mutation, variables: { ...variables, email: null } });
 
-
-    const res = await mutate({ mutation, variables: { email, password } });
-
-    expect(res.errors).toBeDefined();
+    expect(errors).toBeType('array');
   });
 });

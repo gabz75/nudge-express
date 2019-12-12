@@ -29,9 +29,6 @@ const mutation = `
 const variables = { name: 'Medidate', color: '#dedede', public: true };
 
 beforeAll(async () => {
-  await db.sequelize.models.Goal.destroy({ where: {}, force: true });
-  await db.sequelize.models.User.destroy({ where: {}, force: true });
-
   const user = await db.sequelize.models.User.create({
     name: 'Gabe',
     email: 'gabriel@gmail.com',
@@ -41,16 +38,11 @@ beforeAll(async () => {
   setAuthenticatedUser(user);
 });
 
-afterAll(async () => {
-  await db.sequelize.models.Goal.destroy({ where: {}, force: true });
-  await db.sequelize.models.User.destroy({ where: {}, force: true });
-});
-
 describe('createGoal', () => {
   it('returns a goal', async () => {
     const { data: { createGoal } } = await mutate({ mutation, variables });
 
-    expect(createGoal).toBeDefined();
+    expect(createGoal).toBeTruthy();
     expect(createGoal.id).toBeType('string');
     expect(createGoal.name).toBe(variables.name);
     expect(createGoal.color).toBe(variables.color);
@@ -62,6 +54,7 @@ describe('createGoal', () => {
 
   it('returns an error when name is missing', async () => {
     const { errors } = await mutate({ mutation, variables: { ...variables, name: undefined } });
-    expect(errors).toBeDefined();
+
+    expect(errors).toBeTruthy();
   });
 });
