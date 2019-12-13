@@ -22,8 +22,5 @@ jobs:
     - name: yarn install
       run:
         yarn
-    - name: yarn lint
-      run:
-        yarn lint
       env:
         CI: true
