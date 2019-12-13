@@ -19,13 +19,13 @@ const users = [];
 
 beforeAll(async () => {
   users.push(await db.sequelize.models.User.create({
-    name: 'Gabe',
+    name: faker.name.firstName(),
     email: faker.internet.email(),
     password: 'qweqweqwe',
   }));
 
   users.push(await db.sequelize.models.User.create({
-    name: 'Charles',
+    name: faker.name.firstName(),
     email: faker.internet.email(),
     password: 'qweqweqwe',
   }));

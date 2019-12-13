@@ -24,14 +24,14 @@ let goal;
 
 beforeAll(async () => {
   user = await db.sequelize.models.User.create({
-    name: 'Gabe',
+    name: faker.name.firstName(),
     email: faker.internet.email(),
     password: 'qweqweqwe',
   });
 
   goal = await db.sequelize.models.Goal.create({
     name: 'Meditate',
-    color: '#d9d9d9',
+    color: faker.internet.color(),
     UserId: user.id,
   });
 
@@ -71,14 +71,14 @@ describe("given someonelse's goal", () => {
   beforeAll(async () => {
     // this data should no show as a result of the getGoal
     const bob = await db.sequelize.models.User.create({
-      name: 'Marc',
+      name: faker.name.firstName(),
       email: faker.internet.email(),
       password: 'qweqweqwe',
     });
 
     bobsGoal = await db.sequelize.models.Goal.create({
       name: 'I am running too!',
-      color: '#d8d8d8',
+      color: faker.internet.color(),
       UserId: bob.id,
     });
   });

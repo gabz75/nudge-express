@@ -22,7 +22,7 @@ let user;
 
 beforeAll(async () => {
   user = await db.sequelize.models.User.create({
-    name: 'Gabe',
+    name: faker.name.firstName(),
     email: faker.internet.email(),
     password: 'qweqweqwe',
   });
@@ -48,26 +48,26 @@ describe('with goals', () => {
   beforeAll(async () => {
     await db.sequelize.models.Goal.create({
       name: 'Meditate',
-      color: '#d9d9d9',
+      color: faker.internet.color(),
       UserId: user.id,
     });
 
     await db.sequelize.models.Goal.create({
       name: 'Run',
-      color: '#d8d8d8',
+      color: faker.internet.color(),
       UserId: user.id,
     });
 
     // this data should no show as a result of the getGoals
     const bob = await db.sequelize.models.User.create({
-      name: 'Marc',
+      name: faker.name.firstName(),
       email: faker.internet.email(),
       password: 'qweqweqwe',
     });
 
     await db.sequelize.models.Goal.create({
       name: 'I am running too!',
-      color: '#d8d8d8',
+      color: faker.internet.color(),
       UserId: bob.id,
     });
   });

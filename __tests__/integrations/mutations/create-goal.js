@@ -1,3 +1,5 @@
+import faker from 'faker';
+
 import { setAuthenticatedUser } from '../../utils/apollo-server-context';
 import { useTestClient, db, dropModel } from '../../utils/use-test-client';
 
@@ -21,8 +23,8 @@ const variables = { name: 'Medidate', color: '#dedede', public: true };
 
 beforeAll(async () => {
   const user = await db.sequelize.models.User.create({
-    name: 'Gabe',
-    email: 'gabriel@gmail.com',
+    name: faker.name.firstName(),
+    email: faker.internet.email(),
     password: 'qweqweqwe',
   });
 
