@@ -2,6 +2,12 @@ name: Node CI
 
 on: [push]
 
+env:
+  MYSQL_ROOT_PASSWORD:
+  MYSQL_DATABASE: nudge_test
+  MYSQL_USER: root
+  MYSQL_PASSWORD: root
+
 jobs:
   build:
 
@@ -17,6 +23,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Setup MySQL
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        mysql database: $MYSQL_DATABASE
+        mysql user: $MYSQL_USER
+        mysql password: $MYSQL_PASSWORD
     - name: Yarn CLI
       uses: CultureHQ/actions-yarn@v1.0.1
     - name: Install Dependencies
