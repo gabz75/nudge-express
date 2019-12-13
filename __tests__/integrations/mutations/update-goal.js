@@ -39,6 +39,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await dropModel('Goal');
   await dropModel('User');
+  await db.sequelize.close();
 });
 
 describe('updateGoal', () => {

@@ -1,6 +1,6 @@
 import makeUser from '../../factories/user';
 import { setAuthenticatedUser } from '../../utils/apollo-server-context';
-import { useTestClient, dropModel } from '../../utils/use-test-client';
+import { useTestClient, db, dropModel } from '../../utils/use-test-client';
 
 const { query } = useTestClient();
 
@@ -26,6 +26,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await dropModel('User');
+  await db.sequelize.close();
 });
 
 describe('getUsers', () => {

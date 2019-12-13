@@ -1,5 +1,5 @@
 import makeUser from '../../factories/user';
-import { useTestClient, dropModel } from '../../utils/use-test-client';
+import { useTestClient, db, dropModel } from '../../utils/use-test-client';
 
 const { mutate } = useTestClient();
 
@@ -24,6 +24,10 @@ beforeEach(async () => {
 
 afterEach(async () => {
   await dropModel('User');
+});
+
+afterAll(async () => {
+  await db.sequelize.close();
 });
 
 describe('createUser', () => {

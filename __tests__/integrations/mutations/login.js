@@ -23,6 +23,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await dropModel('User');
+  await db.sequelize.close();
 });
 
 describe('login', () => {
