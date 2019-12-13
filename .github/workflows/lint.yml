@@ -8,28 +8,15 @@ env:
   MYSQL_PASSWORD: root
 
 jobs:
-  test-host:
+  ci:
 
     runs-on: ubuntu-latest
 
     services:
       mysql:
         image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: password
         ports:
         - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-    steps:
-    - name: Verify MySQL connection from host
-      run: |
-        sudo apt-get install -y mysql-client
-        mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -ppassword -e "SHOW DATABASES"
-
-  build:
-
-    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -41,7 +28,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Yarn CLI
+    - name: Install Yarn
       uses: CultureHQ/actions-yarn@v1.0.1
     - name: Install Dependencies
       run:
@@ -49,5 +36,8 @@ jobs:
     - name: ESLint
       run:
         yarn lint
+    - name: Prepare Database
+      run:
+        yarn test:db:init
       env:
         CI: true
