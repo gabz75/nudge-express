@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon --exec babel-node app.js",
     "test": "./node_modules/jest/bin/jest.js --watchAll --runInBand",
+    "test:ci": "./node_modules/jest/bin/jest.js --runInBand",
     "lint": "./node_modules/eslint/bin/eslint.js . -c .eslintrc.js",
     "test:db:reset": "./bin/test-db-reset.js",
     "test:db:init": "./bin/test-db-init.js"

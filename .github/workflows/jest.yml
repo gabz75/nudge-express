@@ -1,0 +1,39 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  jest:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Yarn
+      uses: CultureHQ/actions-yarn@v1.0.1
+    - name: Install Dependencies
+      run:
+        yarn
+    - name: Prepare Database
+      run:
+        yarn test:db:init
+    - name: Run Jest
+      run:
+        yarn test:ci
+      env:
+        CI: true
+        MYSQL_DATABASE: nudge_test
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
