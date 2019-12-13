@@ -2,64 +2,71 @@ import { GraphQLDateTime } from 'graphql-iso-date';
 
 export default {
   User: {
-    nudges: (parent, args, context, info) => parent.getNudges(),
-    jwt: (parent, args, context ,info) => parent.getJWT(),
+    goals: (parent /* , args, context, info */) => parent.getGoals(),
+    jwt: (parent /* , args, context, info */) => parent.getJWT(),
   },
-  Nudge: {
-    user: (parent, args, context, info) => parent.getUser(),
+  Goal: {
+    user: (parent /* , args, context, info */) => parent.getUser(),
   },
   Query: {
-    getUsers: (parent, args, { db }, info) => db.User.findAll(),
-    getNudges: (parent, args, { db }, info) => {
-
-      return new Promise((resolve) => {
+    getUsers: (parent, args, { db } /* , info */) => db.User.findAll(),
+    getGoals: (parent, args, { db, authenticatedUser } /* , info */) => (
+      new Promise((resolve) => {
         setTimeout(() => {
-          resolve(db.Nudge.findAll());
+          resolve(db.Goal.findAll({ where: { UserId: authenticatedUser.id } }));
         }, 0);
-      });
-    },
-    getNudge: (parent, { id }, { db, authenticatedUser }, info) => {
-      return db.Nudge.findOne({where: { id: id, UserId: authenticatedUser.id }});
-    },
+      })
+    ),
+    getGoal: (parent, { id }, { db, authenticatedUser } /* , info */) => (
+      db.Goal.findOne({ where: { id, UserId: authenticatedUser.id } })
+    ),
   },
   Mutation: {
-    createUser: (parent, args, { db }, info) => db.User.create(args),
-    login: async (parent, args, { db }, info) => {
-      const user = await db.User.findOne({ where: { email: args['email'] }});
+    createUser: (parent, args, context /* , info */) => {
+      const { db } = context;
+      context.ignorePrivateFieldDirective = true;
+
+      return db.User.create(args);
+    },
+    login: async (parent, args, context /* , info */) => {
+      const { db } = context;
+      const user = await db.User.findOne({ where: { email: args.email } });
 
       if (!user) {
         throw new Error('no user found');
       }
 
-      if (!user.verifyPassword(args['password'])) {
+      if (!user.verifyPassword(args.password)) {
         throw new Error('invalid password');
       }
 
+      context.ignorePrivateFieldDirective = true;
+
       return user;
     },
-    createNudge: (parent, args, { db, authenticatedUser }, info) => {
-      return db.Nudge.create({ ...args, UserId: authenticatedUser.id });
-    },
-    updateNudge: async (parent, args, { db, authenticatedUser }, info) => {
+    createGoal: (parent, args, { db, authenticatedUser } /* , info */) => (
+      db.Goal.create({ ...args, UserId: authenticatedUser.id })
+    ),
+    updateGoal: async (parent, args, { db, authenticatedUser } /* , info */) => {
       const { id, ...otherArgs } = args;
 
-      const nudge = await db.Nudge.findOne({where: { id: id, UserId: authenticatedUser.id }});
+      const goal = await db.Goal.findOne({ where: { id, UserId: authenticatedUser.id } });
 
-       if (!nudge) {
-         throw new Error('No nudge found');
-       }
+      if (!goal) {
+        throw new Error('No goal found');
+      }
 
-      return nudge.update(otherArgs);
+      return goal.update(otherArgs);
     },
-    deleteNudge: async (parent, args, { db, authenticatedUser }, info) => {
+    deleteGoal: async (parent, args, { db, authenticatedUser } /* , info */) => {
       const { id } = args;
-      const nudge = await db.Nudge.findOne({where: { id: id, UserId: authenticatedUser.id }});
+      const goal = await db.Goal.findOne({ where: { id, UserId: authenticatedUser.id } });
 
-       if (!nudge) {
-         throw new Error('No nudge found');
-       }
+      if (!goal) {
+        throw new Error('No goal found');
+      }
 
-       return nudge.destroy();
+      return goal.destroy();
     },
   },
   DateTime: GraphQLDateTime,

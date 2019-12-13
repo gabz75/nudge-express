@@ -1,17 +1,19 @@
-'use strict';
+import { generateSalt, encryptPassword } from '../models/user';
 
-module.exports = {
-  up: (queryInterface, Sequelize) => {
+export default {
+  up: (queryInterface /* , Sequelize */) => {
+    const encryptedPasswordSalt = generateSalt();
+    const encryptedPassword = encryptPassword('qweqweqwe', encryptedPasswordSalt);
+
     return queryInterface.bulkInsert('Users', [{
       name: 'Gabe',
       email: 'gabe@gmail.com',
-      password: 'qwerty',
+      encryptedPassword,
+      encryptedPasswordSalt,
       createdAt: new Date(),
       updatedAt: new Date(),
     }], {});
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Users', null, {});
-  }
+  down: (queryInterface /* , Sequelize */) => queryInterface.bulkDelete('Users', null, {}),
 };

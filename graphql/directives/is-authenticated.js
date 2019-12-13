@@ -1,37 +1,42 @@
 import { SchemaDirectiveVisitor } from 'apollo-server-express';
-import { defaultFieldResolver } from "graphql";
-
+import { defaultFieldResolver } from 'graphql';
+import { UnauthorizedError } from 'express-jwt';
 
 class IsAuthenticatedDirective extends SchemaDirectiveVisitor {
+  /**
+   * Extract the User ID from the JWT payload and attempt to find the User in database.
+   * Throws an error when the JWT is missing or if it does not contain the correct User ID in its payload.
+   *
+   * @param  {GraphQLField<any, any>} field
+   * @throws UnauthorizedError
+   */
   visitFieldDefinition(field) {
-     const { resolve = defaultFieldResolver } = field;
+    const { resolve = defaultFieldResolver } = field;
 
-     field.resolve = async function(...args) {
-       let context;
-       [,,context] = args;
+    field.resolve = async (...args) => {
+      const [,, context] = args;
+      const { jwtPayload } = context;
+      const { User } = context.db.sequelize.models;
 
-       const jwtPayload = context.jwtPayload;
-       const User = context.db.sequelize.models.User;
+      if (!jwtPayload) {
+        throw new UnauthorizedError('missing_jwt', { message: 'Missing JWT in Authorization header' });
+      }
 
-       if (!jwtPayload) {
-         throw new Error('No JWT Payload');
-       }
+      if (!jwtPayload.id) {
+        throw new UnauthorizedError('invalid_jwt', { message: 'Invalid JWT' });
+      }
 
-       if (!jwtPayload.id) {
-         throw new Error('Missing `id` in JWT Payload');
-       }
+      const authenticatedUser = await User.findByPk(jwtPayload.id);
 
-       const authenticatedUser = await User.findByPk(jwtPayload.id);
+      if (!authenticatedUser) {
+        throw new UnauthorizedError('invalid_jwt', { message: 'Invalid JWT' });
+      }
 
-       if (!authenticatedUser) {
-         throw new Error('No user found');
-       }
+      // attach authenticatedUser to the context
+      context.authenticatedUser = authenticatedUser;
 
-       // attach authenticatedUser to the context
-       context.authenticatedUser = authenticatedUser;
-
-       return resolve.apply(this, args);
-     };
+      return resolve.apply(this, args);
+    };
   }
 }
 
