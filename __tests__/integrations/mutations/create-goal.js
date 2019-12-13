@@ -1,7 +1,6 @@
-import faker from 'faker';
-
+import makeUser from '../../factories/user';
 import { setAuthenticatedUser } from '../../utils/apollo-server-context';
-import { useTestClient, db, dropModel } from '../../utils/use-test-client';
+import { useTestClient, dropModel } from '../../utils/use-test-client';
 
 const { mutate } = useTestClient();
 
@@ -22,24 +21,13 @@ const mutation = `
 const variables = { name: 'Medidate', color: '#dedede', public: true };
 
 beforeAll(async () => {
-  const user = await db.sequelize.models.User.create({
-    name: faker.name.firstName(),
-    email: faker.internet.email(),
-    password: 'qweqweqwe',
-  });
+  const user = await makeUser();
 
   setAuthenticatedUser(user);
 });
 
-beforeEach(async () => {
-  await dropModel('Goal');
-});
-
-afterEach(async () => {
-  await dropModel('Goal');
-});
-
 afterAll(async () => {
+  await dropModel('Goal');
   await dropModel('User');
 });
 

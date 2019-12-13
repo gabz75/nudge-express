@@ -1,6 +1,7 @@
-import faker from 'faker';
+import makeUser from '../../factories/user';
+import makeGoal from '../../factories/goal';
 import { setAuthenticatedUser } from '../../utils/apollo-server-context';
-import { useTestClient, db, dropModel } from '../../utils/use-test-client';
+import { useTestClient, dropModel } from '../../utils/use-test-client';
 
 const { query } = useTestClient();
 
@@ -23,17 +24,8 @@ let bobsGoal;
 let goal;
 
 beforeAll(async () => {
-  user = await db.sequelize.models.User.create({
-    name: faker.name.firstName(),
-    email: faker.internet.email(),
-    password: 'qweqweqwe',
-  });
-
-  goal = await db.sequelize.models.Goal.create({
-    name: 'Meditate',
-    color: faker.internet.color(),
-    UserId: user.id,
-  });
+  user = await makeUser();
+  goal = await makeGoal({ UserId: user.id });
 
   setAuthenticatedUser(user);
 });
@@ -70,17 +62,8 @@ describe('getGoal', () => {
 describe("given someonelse's goal", () => {
   beforeAll(async () => {
     // this data should no show as a result of the getGoal
-    const bob = await db.sequelize.models.User.create({
-      name: faker.name.firstName(),
-      email: faker.internet.email(),
-      password: 'qweqweqwe',
-    });
-
-    bobsGoal = await db.sequelize.models.Goal.create({
-      name: 'I am running too!',
-      color: faker.internet.color(),
-      UserId: bob.id,
-    });
+    const bob = await makeUser();
+    bobsGoal = await makeGoal({ UserId: bob.id });
   });
 
   it('returns no error and no data', async () => { // @todo: should consider returning a 403

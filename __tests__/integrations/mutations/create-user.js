@@ -1,3 +1,4 @@
+import makeUser from '../../factories/user';
 import { useTestClient, dropModel } from '../../utils/use-test-client';
 
 const { mutate } = useTestClient();
@@ -54,5 +55,26 @@ describe('createUser', () => {
     const { errors } = await mutate({ mutation, variables: { ...variables, password: undefined } });
 
     expect(errors).toBeTruthy();
+  });
+
+  describe('when email is already taken', () => {
+    let user;
+
+    beforeEach(async () => {
+      user = await makeUser({ email: variables.email });
+    });
+
+    afterEach(async () => {
+      await user.destroy();
+    });
+
+    it('returns an error', async () => {
+      const { errors } = await mutate({ mutation, variables });
+
+      // @todo: have a better error response returned to the frontend.
+      // console.log(errors[0].extensions.exception.errors);
+
+      expect(errors).toBeTruthy();
+    });
   });
 });

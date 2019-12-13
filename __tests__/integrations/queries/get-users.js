@@ -1,6 +1,6 @@
-import faker from 'faker';
+import makeUser from '../../factories/user';
 import { setAuthenticatedUser } from '../../utils/apollo-server-context';
-import { useTestClient, db, dropModel } from '../../utils/use-test-client';
+import { useTestClient, dropModel } from '../../utils/use-test-client';
 
 const { query } = useTestClient();
 
@@ -18,17 +18,8 @@ const GET_USERS = `
 const users = [];
 
 beforeAll(async () => {
-  users.push(await db.sequelize.models.User.create({
-    name: faker.name.firstName(),
-    email: faker.internet.email(),
-    password: 'qweqweqwe',
-  }));
-
-  users.push(await db.sequelize.models.User.create({
-    name: faker.name.firstName(),
-    email: faker.internet.email(),
-    password: 'qweqweqwe',
-  }));
+  users.push(await makeUser());
+  users.push(await makeUser());
 
   setAuthenticatedUser(users[0]);
 });

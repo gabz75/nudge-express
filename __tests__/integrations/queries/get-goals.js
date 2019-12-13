@@ -1,6 +1,7 @@
-import faker from 'faker';
+import makeUser from '../../factories/user';
+import makeGoal from '../../factories/goal';
 import { setAuthenticatedUser } from '../../utils/apollo-server-context';
-import { useTestClient, db, dropModel } from '../../utils/use-test-client';
+import { useTestClient, dropModel } from '../../utils/use-test-client';
 
 const { query } = useTestClient();
 
@@ -21,11 +22,7 @@ const GET_GOALS = `
 let user;
 
 beforeAll(async () => {
-  user = await db.sequelize.models.User.create({
-    name: faker.name.firstName(),
-    email: faker.internet.email(),
-    password: 'qweqweqwe',
-  });
+  user = await makeUser();
 
   setAuthenticatedUser(user);
 });
@@ -46,30 +43,12 @@ describe('getGoals', () => {
 
 describe('with goals', () => {
   beforeAll(async () => {
-    await db.sequelize.models.Goal.create({
-      name: 'Meditate',
-      color: faker.internet.color(),
-      UserId: user.id,
-    });
-
-    await db.sequelize.models.Goal.create({
-      name: 'Run',
-      color: faker.internet.color(),
-      UserId: user.id,
-    });
+    await makeGoal({ UserId: user.id });
+    await makeGoal({ UserId: user.id });
 
     // this data should no show as a result of the getGoals
-    const bob = await db.sequelize.models.User.create({
-      name: faker.name.firstName(),
-      email: faker.internet.email(),
-      password: 'qweqweqwe',
-    });
-
-    await db.sequelize.models.Goal.create({
-      name: 'I am running too!',
-      color: faker.internet.color(),
-      UserId: bob.id,
-    });
+    const bob = await makeUser();
+    await makeGoal({ UserId: bob.id });
   });
 
   afterAll(async () => {

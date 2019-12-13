@@ -15,7 +15,14 @@ export const encryptPassword = (plainText, salt) => (
 
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    email: DataTypes.STRING,
+    email: {
+      type: DataTypes.STRING,
+      unique: {
+        args: true,
+        msg: 'Email already exists',
+      },
+      allowNull: false,
+    },
     name: DataTypes.STRING,
     encryptedPassword: DataTypes.STRING,
     encryptedPasswordSalt: DataTypes.STRING,
