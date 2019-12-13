@@ -10,10 +10,10 @@ export default {
   },
   Query: {
     getUsers: (parent, args, { db } /* , info */) => db.User.findAll(),
-    getGoals: (parent, args, { db } /* , info */) => (
+    getGoals: (parent, args, { db, authenticatedUser } /* , info */) => (
       new Promise((resolve) => {
         setTimeout(() => {
-          resolve(db.Goal.findAll());
+          resolve(db.Goal.findAll({ where: { UserId: authenticatedUser.id } }));
         }, 0);
       })
     ),
@@ -22,8 +22,14 @@ export default {
     ),
   },
   Mutation: {
-    createUser: (parent, args, { db } /* , info */) => db.User.create(args),
-    login: async (parent, args, { db } /* , info */) => {
+    createUser: (parent, args, context /* , info */) => {
+      const { db } = context;
+      context.ignorePrivateFieldDirective = true;
+
+      return db.User.create(args);
+    },
+    login: async (parent, args, context /* , info */) => {
+      const { db } = context;
       const user = await db.User.findOne({ where: { email: args.email } });
 
       if (!user) {
@@ -33,6 +39,8 @@ export default {
       if (!user.verifyPassword(args.password)) {
         throw new Error('invalid password');
       }
+
+      context.ignorePrivateFieldDirective = true;
 
       return user;
     },

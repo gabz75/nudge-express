@@ -2,8 +2,14 @@ import { SchemaDirectiveVisitor } from 'apollo-server-express';
 import { defaultFieldResolver } from 'graphql';
 import { UnauthorizedError } from 'express-jwt';
 
-
 class IsAuthenticatedDirective extends SchemaDirectiveVisitor {
+  /**
+   * Extract the User ID from the JWT payload and attempt to find the User in database.
+   * Throws an error when the JWT is missing or if it does not contain the correct User ID in its payload.
+   *
+   * @param  {GraphQLField<any, any>} field
+   * @throws UnauthorizedError
+   */
   visitFieldDefinition(field) {
     const { resolve = defaultFieldResolver } = field;
 

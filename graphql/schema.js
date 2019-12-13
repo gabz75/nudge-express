@@ -2,13 +2,14 @@ export default `
   scalar DateTime
 
   directive @isAuthenticated on FIELD_DEFINITION
+  directive @privateField on FIELD_DEFINITION
 
   type User {
     id: ID!
     name: String!
     email: String!
-    goals: [Goal]
-    jwt: String
+    goals: [Goal] @privateField
+    jwt: String @privateField
     createdAt: DateTime
     updatedAt: DateTime
   }

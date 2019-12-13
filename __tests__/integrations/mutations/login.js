@@ -1,4 +1,4 @@
-import { useTestClient, db } from '../../utils/use-test-client';
+import { useTestClient, db, dropModel } from '../../utils/use-test-client';
 
 const { mutate } = useTestClient();
 
@@ -21,6 +21,10 @@ beforeAll(async () => {
   await db.sequelize.models.User.create(variables);
 });
 
+afterAll(async () => {
+  await dropModel('User');
+});
+
 describe('login', () => {
   it('returns a user', async () => {
     const { email, password } = variables;
@@ -31,7 +35,7 @@ describe('login', () => {
     expect(login.id).toBeType('string');
     expect(login.name).toBeTruthy();
     expect(login.email).toBe(email);
-    expect(login.jwt).toBeTruthy();
+    expect(login.jwt).toBeType('string');
     expect(login.createdAt).toBeType('string');
     expect(login.updatedAt).toBeType('string');
   });

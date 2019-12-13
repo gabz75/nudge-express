@@ -12,7 +12,8 @@ export const useTestClient = () => testClient;
 
 export const db = models;
 
-export default {
-  useTestClient,
-  db,
+export const dropModel = async (modelName) => {
+  await db.sequelize.models[modelName].destroy({ where: {}, force: true });
 };
+
+export default useTestClient;

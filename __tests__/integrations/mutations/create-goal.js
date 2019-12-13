@@ -1,5 +1,5 @@
 import { setAuthenticatedUser } from '../../utils/apollo-server-context';
-import { useTestClient, db } from '../../utils/use-test-client';
+import { useTestClient, db, dropModel } from '../../utils/use-test-client';
 
 const { mutate } = useTestClient();
 
@@ -27,6 +27,18 @@ beforeAll(async () => {
   });
 
   setAuthenticatedUser(user);
+});
+
+beforeEach(async () => {
+  await dropModel('Goal');
+});
+
+afterEach(async () => {
+  await dropModel('Goal');
+});
+
+afterAll(async () => {
+  await dropModel('User');
 });
 
 describe('createGoal', () => {

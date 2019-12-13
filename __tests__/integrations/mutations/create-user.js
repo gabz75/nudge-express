@@ -1,4 +1,4 @@
-import { useTestClient } from '../../utils/use-test-client';
+import { useTestClient, dropModel } from '../../utils/use-test-client';
 
 const { mutate } = useTestClient();
 
@@ -16,6 +16,14 @@ const mutation = `
 `;
 
 const variables = { name: 'Gabe', email: 'gabriel@gmail.com', password: 'qweqweqwe' };
+
+beforeEach(async () => {
+  await dropModel('User');
+});
+
+afterEach(async () => {
+  await dropModel('User');
+});
 
 describe('createUser', () => {
   it('returns a new user', async () => {
