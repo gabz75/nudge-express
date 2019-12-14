@@ -1,6 +1,6 @@
-import makeUser from '../../factories/user';
-import { setAuthenticatedUser } from '../../utils/apollo-server-context';
-import { useTestClient, db, dropModel } from '../../utils/use-test-client';
+import makeUser from 'tests/factories/user';
+import { setAuthenticatedUser } from 'tests/utils/apollo-server-context';
+import { useTestClient, db, dropModel } from 'tests/utils/use-test-client';
 
 const { mutate } = useTestClient();
 

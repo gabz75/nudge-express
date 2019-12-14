@@ -1,4 +1,4 @@
-import { useTestClient, db, dropModel } from '../../utils/use-test-client';
+import { useTestClient, db, dropModel } from 'tests/utils/use-test-client';
 
 const { mutate } = useTestClient();
 

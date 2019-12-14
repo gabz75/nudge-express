@@ -1,6 +1,6 @@
 import faker from 'faker';
 
-import db from '../../models';
+import db from '~/models';
 
 const makeGoal = (args) => (
   db.sequelize.models.Goal.create({

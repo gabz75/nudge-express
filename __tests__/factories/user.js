@@ -1,6 +1,6 @@
 import faker from 'faker';
 
-import db from '../../models';
+import db from '~/models';
 
 const makeUser = (args) => (
   db.sequelize.models.User.create({

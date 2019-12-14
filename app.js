@@ -1,10 +1,10 @@
 import express from 'express';
 import jwt from 'express-jwt';
 
-import db from './models';
-import { createContext } from './server/apollo-server-context';
-import { createServer } from './server/create-server';
-import { ENV } from './config';
+import db from '~/models';
+import { createContext } from '~/server/apollo-server-context';
+import { createServer } from '~/server/create-server';
+import { ENV } from '~/config';
 
 // App
 const app = express();

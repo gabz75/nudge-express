@@ -3,6 +3,26 @@
     "@babel/preset-env",
   ],
   "plugins": [
-    ["@babel/plugin-transform-runtime", { "regenerator": true }]
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      },
+    ],
+    [
+      "babel-plugin-root-import",
+      {
+        "paths": [
+          {
+            "rootPathSuffix": "./src/",
+            "rootPathPrefix": "~/"
+          },
+          {
+            "rootPathSuffix": "./__tests__/",
+            "rootPathPrefix": "tests/"
+          },
+        ]
+      }
+    ]
   ]
 }

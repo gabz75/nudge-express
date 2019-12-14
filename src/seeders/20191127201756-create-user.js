@@ -1,4 +1,4 @@
-import { generateSalt, encryptPassword } from '../models/user';
+import { generateSalt, encryptPassword } from '~/models/user';
 
 export default {
   up: (queryInterface /* , Sequelize */) => {
