@@ -5,10 +5,11 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon --exec babel-node app.js",
-    "test": "yarn jest --watchAll --runInBand",
-    "prepare:reset:test": "NODE_ENV=test yarn sequelize db:drop && NODE_ENV=test yarn sequelize db:create && NODE_ENV=test yarn sequelize db:migrate",
-    "prepare:init:test": "NODE_ENV=test yarn sequelize db:create && NODE_ENV=test yarn sequelize db:migrate",
-    "lint": "yarn eslint . -c .eslintrc.js"
+    "test": "./node_modules/jest/bin/jest.js --watchAll --runInBand",
+    "test:ci": "./node_modules/jest/bin/jest.js --runInBand",
+    "lint": "./node_modules/eslint/bin/eslint.js . -c .eslintrc.js",
+    "test:db:reset": "./bin/test-db-reset.js",
+    "test:db:init": "./bin/test-db-init.js"
   },
   "dependencies": {
     "@babel/cli": "^7.7.4",

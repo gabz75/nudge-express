@@ -3,9 +3,13 @@ name: Node CI
 on: [push]
 
 jobs:
-  build:
+  jest:
 
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
 
     strategy:
       matrix:
@@ -17,13 +21,19 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Yarn CLI
+    - name: Install Yarn
       uses: CultureHQ/actions-yarn@v1.0.1
     - name: Install Dependencies
       run:
         yarn
-    - name: ESLint
+    - name: Prepare Database
       run:
-        yarn lint
+        yarn test:db:init
+    - name: Run Jest
+      run:
+        yarn test:ci
       env:
         CI: true
+        MYSQL_DATABASE: nudge_test
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
