@@ -1,8 +1,8 @@
 import { createTestClient } from 'apollo-server-testing';
 
-import * as models from '../../models';
+import * as models from '~/models';
 import { createContext } from './apollo-server-context';
-import { createServer } from '../../server/create-server';
+import { createServer } from '~/server/create-server';
 
 const context = createContext(models);
 const server = createServer(context);

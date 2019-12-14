@@ -1,7 +1,7 @@
 import jsonwebtoken from 'jsonwebtoken';
 import crypto from 'crypto';
 
-import { ENV } from '../config';
+import { ENV } from '~/config';
 
 export const generateSalt = () => crypto.randomBytes(16).toString('base64');
 
