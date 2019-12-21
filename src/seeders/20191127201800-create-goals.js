@@ -1,10 +1,14 @@
 export default {
   up: async (queryInterface /* , Sequelize */) => {
-    const usersRow = await queryInterface.sequelize.query('SELECT id from Users;');
+    const [userRows] = await queryInterface.sequelize.query('SELECT id from Users;');
+    const [goalEntryDefBoolRows] = await queryInterface.sequelize.query('SELECT id from GoalEntryDefBools;');
+    const [goalEntryDefIntRows] = await queryInterface.sequelize.query('SELECT id from GoalEntryDefInts;');
 
-    const primaryUserId = usersRow[0][0].id;
+    const userId = userRows[0].id;
+    const goalEntryDefBoolId = goalEntryDefBoolRows[0].id;
+    const goalEntryDefIntId = goalEntryDefIntRows[0].id;
 
-    return queryInterface.bulkInsert(
+    await queryInterface.bulkInsert(
       'Goals', [
         {
           name: 'Meditate',
@@ -13,7 +17,9 @@ export default {
           public: true,
           createdAt: new Date(),
           updatedAt: new Date(),
-          userId: primaryUserId,
+          userId,
+          goalEntryDef: 'goalEntryDefInt',
+          goalEntryDefId: goalEntryDefIntId,
         },
         {
           name: 'Read',
@@ -22,83 +28,38 @@ export default {
           public: true,
           createdAt: new Date(),
           updatedAt: new Date(),
-          userId: primaryUserId,
-        },
-        {
-          name: 'Climb',
-          color: '#dedede',
-          archived: false,
-          public: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          userId: primaryUserId,
-        },
-        {
-          name: 'Yoga',
-          color: '#dedede',
-          archived: false,
-          public: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          userId: primaryUserId,
-        },
-        {
-          name: 'Run',
-          color: '#dedede',
-          archived: false,
-          public: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          userId: primaryUserId,
-        },
-        {
-          name: 'Physical Therapy',
-          color: '#dedede',
-          archived: false,
-          public: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          userId: primaryUserId,
-        },
-        {
-          name: 'Cycle',
-          color: '#dedede',
-          archived: false,
-          public: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          userId: primaryUserId,
-        },
-        {
-          name: 'No alcohol',
-          color: '#dedede',
-          archived: false,
-          public: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          userId: primaryUserId,
-        },
-        {
-          name: 'No sugar',
-          color: '#dedede',
-          archived: false,
-          public: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          userId: primaryUserId,
-        },
-        {
-          name: 'No coffee',
-          color: '#dedede',
-          archived: false,
-          public: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          userId: primaryUserId,
+          userId,
+          goalEntryDef: 'goalEntryDefBool',
+          goalEntryDefId: goalEntryDefBoolId,
         },
       ],
       {},
     );
+
+    const [moodReportRows] = await queryInterface.sequelize.query('SELECT id from MoodReports;');
+    const [goalRows] = await queryInterface.sequelize.query('SELECT id from Goals;');
+
+    const moodReportId = moodReportRows[0].id;
+
+    return Promise.all(goalRows.map(async (goal) => {
+      await queryInterface.bulkInsert(
+        'GoalEntries', [
+          {
+            goalId: goal.id,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            moodReportId,
+          },
+          {
+            goalId: goal.id,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            moodReportId,
+          },
+        ],
+        {},
+      );
+    }));
   },
 
   down: (queryInterface /* , Sequelize */) => queryInterface.bulkDelete('Goals', null, {}),
