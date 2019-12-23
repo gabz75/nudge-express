@@ -1,21 +1,72 @@
 import { GraphQLDateTime } from 'graphql-iso-date';
 
 export default {
+  GoalEntryDef: {
+    // eslint-disable-next-line no-underscore-dangle
+    __resolveType(goalEntryDef /* , context, info */) {
+      if (goalEntryDef.unit) {
+        return 'GoalEntryDefInt';
+      }
+
+      if (goalEntryDef) {
+        return 'GoalEntryDefBool';
+      }
+
+      return null;
+    },
+  },
+  GoalEnterable: {
+    // eslint-disable-next-line no-underscore-dangle
+    __resolveType(goalEnterable /* , context, info */) {
+      if (typeof goalEnterable.value === 'boolean') {
+        return 'GoalEntryBool';
+      }
+
+      if (goalEnterable) {
+        return 'GoalEntryInt';
+      }
+
+      return null;
+    },
+  },
+  GoalEntry: {
+    moodReport: (parent /* , args, context, info */) => parent.getMoodReport(),
+    goal: (parent /* , args, context, info */) => parent.getGoal(),
+    entry: (parent /* , args, context, info */) => {
+      if (parent.goalEnterable === 'goalEntryInt') {
+        return parent.getGoalEntryInt();
+      }
+
+      if (parent.goalEnterable === 'goalEntryBool') {
+        return parent.getGoalEntryBool();
+      }
+
+      return null;
+    },
+  },
   User: {
     goals: (parent /* , args, context, info */) => parent.getGoals(),
     jwt: (parent /* , args, context, info */) => parent.getJWT(),
   },
   Goal: {
     user: (parent /* , args, context, info */) => parent.getUser(),
+    goalEntries: (parent /* , args, context, info */) => parent.getGoalEntries(),
+    goalEntryDef: (parent /* , args, context, info */) => {
+      if (parent.goalEntryDef === 'goalEntryDefInt') {
+        return parent.getGoalEntryDefInt();
+      }
+
+      if (parent.goalEntryDef === 'goalEntryDefBool') {
+        return parent.getGoalEntryDefBool();
+      }
+
+      return null;
+    },
   },
   Query: {
     getUsers: (parent, args, { db } /* , info */) => db.User.findAll(),
     getGoals: (parent, args, { db, authenticatedUser } /* , info */) => (
-      new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(db.Goal.findAll({ where: { UserId: authenticatedUser.id } }));
-        }, 0);
-      })
+      db.Goal.findAll({ where: { UserId: authenticatedUser.id } })
     ),
     getGoal: (parent, { id }, { db, authenticatedUser } /* , info */) => (
       db.Goal.findOne({ where: { id, UserId: authenticatedUser.id } })

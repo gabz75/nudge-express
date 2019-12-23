@@ -1,8 +1,8 @@
 export default {
-  up: (queryInterface /* , Sequelize */) => {
+  up: async (queryInterface /* , Sequelize */) => {
     const now = new Date();
 
-    return queryInterface.bulkInsert('GoalEntryDefs', [{
+    await queryInterface.bulkInsert('GoalEntryDefs', [{
       goalEntryDefMapping: 'GoalEntryDefBool',
       friendlyName: 'Basic',
       description: 'The most basic way of tracking your goal, simply mark as done or not',
@@ -15,7 +15,32 @@ export default {
       createdAt: now,
       updatedAt: now,
     }], {});
+
+    await queryInterface.bulkInsert(
+      'GoalEntryDefBools', [
+        {
+          createdAt: now,
+          updatedAt: now,
+        },
+      ],
+      {},
+    );
+
+    await queryInterface.bulkInsert(
+      'GoalEntryDefInts', [
+        {
+          unit: 'minute',
+          createdAt: now,
+          updatedAt: now,
+        },
+      ],
+      {},
+    );
   },
 
-  down: (queryInterface /* , Sequelize */) => queryInterface.bulkDelete('GoalEntryDefs', null, {}),
+  down: (queryInterface /* , Sequelize */) => Promise.all([
+    queryInterface.bulkDelete('GoalEntryDefs', null, {}),
+    queryInterface.bulkDelete('GoalEntryDefBools', null, {}),
+    queryInterface.bulkDelete('GoalEntryDefInts', null, {}),
+  ]),
 };
