@@ -8,7 +8,7 @@ import makeMoodReport from 'tests/factories/mood-report';
 const makeGoalWithEntry = async ({ user }) => {
   const date = new Date();
   const goalEntryDef = await makeGoalEntryDef(); // @todo associate with goalEntryDefBool.
-  const goalEntryDefBool = await makeGoalEntryDefBool();
+  const goalEntryDefBool = await makeGoalEntryDefBool({ GoalEntryDefId: goalEntryDef.id });
   const moodReport = await makeMoodReport({
     UserId: user.id,
     date,

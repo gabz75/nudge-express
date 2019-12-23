@@ -15,6 +15,16 @@ export default {
         type: Sequelize.DATE,
         allowNull: false,
       },
+      goalEntryDefId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'GoalEntryDefs',
+          },
+          key: 'id',
+        },
+        allowNull: false,
+      },
     })
   ),
 

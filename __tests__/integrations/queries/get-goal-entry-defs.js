@@ -9,7 +9,7 @@ const GET_GOAL_ENTRY_DEFS = `
   query {
     getGoalEntryDefs {
       id
-      goalEntryDefMapping
+      type
       friendlyName
       description
       createdAt
@@ -49,7 +49,7 @@ describe('getGoalEntryDefs', () => {
     expect(getGoalEntryDef.id).toBeDefined();
     expect(getGoalEntryDef.id).not.toBeNull();
     expect(getGoalEntryDef.id).toBe(`${goalEntryDef.id}`);
-    expect(getGoalEntryDef.goalEntryDefMapping).toBeType('string');
+    expect(getGoalEntryDef.type).toBeType('string');
     expect(getGoalEntryDef.friendlyName).toBeType('string');
     expect(getGoalEntryDef.description).toBeType('string');
     expect(getGoalEntryDef.createdAt).toBeType('string');

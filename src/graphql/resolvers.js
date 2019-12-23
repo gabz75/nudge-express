@@ -44,6 +44,15 @@ export default {
       return null;
     },
   },
+  GoalEntryDefBool: {
+    goalEntryDef: (parent /* , args, context, info */) => parent.getGoalEntryDef(),
+  },
+  GoalEntryDefInt: {
+    goalEntryDef: (parent /* , args, context, info */) => parent.getGoalEntryDef(),
+  },
+  GoalEntryDef: {
+    goalEntryDefs: (parent /* , args, context, info */) => parent.getGoalEntryDefs(),
+  },
   User: {
     goals: (parent /* , args, context, info */) => parent.getGoals(),
     jwt: (parent /* , args, context, info */) => parent.getJWT(),

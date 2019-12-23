@@ -8,6 +8,7 @@ export default `
     id: ID!
     createdAt: DateTime
     updatedAt: DateTime
+    goalEntryDef: GoalEntryDef
   }
 
   interface GoalEnterable {
@@ -18,9 +19,10 @@ export default `
 
   type GoalEntryDef {
     id: ID!
-    goalEntryDefMapping: String
+    type: String
     friendlyName: String
     description: String
+    goalEntryDefs: [GoalEntryDefImpl]
     createdAt: DateTime
     updatedAt: DateTime
   }
@@ -29,6 +31,7 @@ export default `
     id: ID!
     createdAt: DateTime
     updatedAt: DateTime
+    goalEntryDef: GoalEntryDef
   }
 
   type GoalEntryDefInt implements GoalEntryDefImpl {
@@ -36,6 +39,7 @@ export default `
     unit: String
     createdAt: DateTime
     updatedAt: DateTime
+    goalEntryDef: GoalEntryDef
   }
 
   type GoalEntryBool implements GoalEnterable {

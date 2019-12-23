@@ -4,6 +4,7 @@ export default (sequelize, DataTypes) => {
     updatedAt: DataTypes.DATE,
   }, {});
   GoalEntryDefBool.associate = function associate(models) {
+    GoalEntryDefBool.belongsTo(models.GoalEntryDef);
     GoalEntryDefBool.hasOne(models.Goal, {
       foreignKey: 'goalEntryDefId',
       constraints: false,

@@ -3,24 +3,27 @@ export default {
     const now = new Date();
 
     await queryInterface.bulkInsert('GoalEntryDefs', [{
-      goalEntryDefMapping: 'GoalEntryDefBool',
+      type: 'GoalEntryDefBool',
       friendlyName: 'Basic',
       description: 'The most basic way of tracking your goal, simply mark as done or not',
       createdAt: now,
       updatedAt: now,
     }, {
-      goalEntryDefMapping: 'GoalEntryDefInt',
+      type: 'GoalEntryDefInt',
       friendlyName: 'Occurences',
       description: 'Define an unit and track more precisely how often, how much',
       createdAt: now,
       updatedAt: now,
     }], {});
 
+    const [goalEntryDefRows] = await queryInterface.sequelize.query('SELECT id from GoalEntryDefs;');
+
     await queryInterface.bulkInsert(
       'GoalEntryDefBools', [
         {
           createdAt: now,
           updatedAt: now,
+          goalEntryDefId: goalEntryDefRows[0].id,
         },
       ],
       {},
@@ -32,6 +35,7 @@ export default {
           unit: 'minute',
           createdAt: now,
           updatedAt: now,
+          goalEntryDefId: goalEntryDefRows[1].id,
         },
       ],
       {},

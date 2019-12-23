@@ -1,13 +1,21 @@
 export default {
   up: (queryInterface, Sequelize) => (
-    queryInterface.createTable('GoalEntryDefInts', {
+    queryInterface.createTable('GoalEntryDefs', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      unit: {
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      friendlyName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      description: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -22,5 +30,5 @@ export default {
     })
   ),
 
-  down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('GoalEntryDefInts'),
+  down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('GoalEntryDefs'),
 };
