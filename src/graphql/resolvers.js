@@ -1,7 +1,7 @@
 import { GraphQLDateTime } from 'graphql-iso-date';
 
 export default {
-  GoalEntryDefProxy: {
+  GoalEntryDefImpl: {
     // eslint-disable-next-line no-underscore-dangle
     __resolveType(goalEntryDef /* , context, info */) {
       if (goalEntryDef.unit) {
@@ -71,7 +71,7 @@ export default {
     getGoal: (parent, { id }, { db, authenticatedUser } /* , info */) => (
       db.Goal.findOne({ where: { id, UserId: authenticatedUser.id } })
     ),
-    getGoalEntryDefs: (parent, { id }, { db, authenticatedUser } /* , info */) => db.GoalEntryDef.findAll(),
+    getGoalEntryDefs: (parent, args, { db } /* , info */) => db.GoalEntryDef.findAll(),
   },
   Mutation: {
     createUser: (parent, args, context /* , info */) => {

@@ -5,7 +5,6 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon --exec babel-node app.js",
-    "t": "yarn babel-node test.js",
     "test": "./node_modules/jest/bin/jest.js --watchAll --runInBand",
     "test:ci": "./node_modules/jest/bin/jest.js --runInBand",
     "lint": "./node_modules/eslint/bin/eslint.js . -c .eslintrc.js",

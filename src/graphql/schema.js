@@ -4,7 +4,7 @@ export default `
   directive @isAuthenticated on FIELD_DEFINITION
   directive @privateField on FIELD_DEFINITION
 
-  interface GoalEntryDefProxy {
+  interface GoalEntryDefImpl {
     id: ID!
     createdAt: DateTime
     updatedAt: DateTime
@@ -25,13 +25,13 @@ export default `
     updatedAt: DateTime
   }
 
-  type GoalEntryDefBool implements GoalEntryDefProxy {
+  type GoalEntryDefBool implements GoalEntryDefImpl {
     id: ID!
     createdAt: DateTime
     updatedAt: DateTime
   }
 
-  type GoalEntryDefInt implements GoalEntryDefProxy {
+  type GoalEntryDefInt implements GoalEntryDefImpl {
     id: ID!
     unit: String
     createdAt: DateTime
@@ -90,7 +90,7 @@ export default `
     public: Boolean
     user: User!
     goalEntries: [GoalEntry]
-    goalEntryDef: GoalEntryDefProxy
+    goalEntryDef: GoalEntryDefImpl
     createdAt: DateTime
     updatedAt: DateTime
   }
