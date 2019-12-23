@@ -5,6 +5,7 @@ module.exports = {
   testPathIgnorePatterns: [
     'node_modules',
     './__tests__/factories',
+    './__tests__/factory-scenarios',
     './__tests__/utils',
   ],
 };
