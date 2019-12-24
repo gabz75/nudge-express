@@ -13,8 +13,6 @@ const GET_GOAL_ENTRY_DEFS = `
       description
       createdAt
       updatedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -38,7 +36,6 @@ afterAll(async () => {
 describe('getGoalTypes', () => {
   it('returns a list of GoalType', async () => {
     const response = await query({ query: GET_GOAL_ENTRY_DEFS });
-    // console.log(response);
     const { data: { getGoalTypes } } = response;
     const [getGoalType] = getGoalTypes;
     const [goalType] = goalTypes;
