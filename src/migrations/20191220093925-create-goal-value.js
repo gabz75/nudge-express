@@ -1,14 +1,11 @@
 export default {
   up: (queryInterface, Sequelize) => (
-    queryInterface.createTable('GoalEntries', {
+    queryInterface.createTable('GoalValues', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-      },
-      date: { // @todo: determine if needed
-        type: Sequelize.DATE,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -38,14 +35,14 @@ export default {
         },
         allowNull: false,
       },
-      goalEnterable: {
+      goalValue: {
         type: Sequelize.STRING,
       },
-      goalEnterableId: {
+      goalValueId: {
         type: Sequelize.INTEGER,
       },
     })
   ),
 
-  down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('GoalEntries'),
+  down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('GoalValues'),
 };

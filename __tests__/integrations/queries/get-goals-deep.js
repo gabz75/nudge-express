@@ -1,4 +1,4 @@
-import scenarioGoalWithEntry from 'tests/factory-scenarios/goal-with-entry';
+import scenarioGoalWithValues from 'tests/factory-scenarios/goal-with-entry';
 import { makeUser } from 'tests/factories';
 
 import { setAuthenticatedUser } from 'tests/utils/apollo-server-context';
@@ -16,13 +16,13 @@ const GET_GOALS = `
           unit
         }
       }
-      goalEntries {
-        entry {
+      goalValues {
+        value {
           id
-          ... on GoalEntryInt {
+          ... on GoalValueInt {
             intValue: value
           }
-          ... on GoalEntryBool {
+          ... on GoalValueBool {
             boolValue: value
           }
         }
@@ -34,15 +34,15 @@ const GET_GOALS = `
 beforeAll(async () => {
   const user = await makeUser();
 
-  await scenarioGoalWithEntry({ user });
+  await scenarioGoalWithValues({ user });
 
   setAuthenticatedUser(user);
 });
 
 afterAll(async () => {
-  await dropModel('GoalEntryBool');
+  await dropModel('GoalValueBool');
   await dropModel('GoalTypeBool');
-  await dropModel('GoalEntry');
+  await dropModel('GoalValue');
   await dropModel('GoalType');
   await dropModel('Goal');
   await dropModel('MoodReport');
@@ -59,11 +59,11 @@ describe('getGoals', () => {
     expect(getGoals).toBeType('array');
     expect(getGoals.length).toBe(1);
     expect(goal.goalTypeImpl).toBeDefined();
-    expect(goal.goalEntries).toBeType('array');
+    expect(goal.goalValues).toBeType('array');
 
-    const [goalEntry] = goal.goalEntries;
-    expect(goalEntry).toBeDefined();
-    expect(goalEntry.entry).toBeDefined();
-    expect(goalEntry.entry.boolValue).toBeType('boolean');
+    const [goalValue] = goal.goalValues;
+    expect(goalValue).toBeDefined();
+    expect(goalValue.value).toBeDefined();
+    expect(goalValue.value.boolValue).toBeType('boolean');
   });
 });
