@@ -2,19 +2,19 @@ import db from '~/models';
 
 const DATA = [
   {
-    type: 'GoalEntryDefBool',
+    type: 'GoalTypeBool',
     friendlyName: 'Basic',
     description: 'The most basic way of tracking your goal, simply mark as done or not',
   },
   {
-    type: 'GoalEntryDefInt',
+    type: 'GoalTypeInt',
     friendlyName: 'Occurences',
     description: 'Define an unit and track more precisely how often, how much',
   },
 ];
 
-const makeGoalEntryDef = (args) => (
-  db.sequelize.models.GoalEntryDef.create({
+const makeGoalType = (args) => (
+  db.sequelize.models.GoalType.create({
     type: DATA[0].type,
     friendlyName: DATA[0].friendlyName,
     description: DATA[0].description,
@@ -22,4 +22,4 @@ const makeGoalEntryDef = (args) => (
   })
 );
 
-export default makeGoalEntryDef;
+export default makeGoalType;

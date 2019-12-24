@@ -4,11 +4,11 @@ export default `
   directive @isAuthenticated on FIELD_DEFINITION
   directive @privateField on FIELD_DEFINITION
 
-  interface GoalEntryDefImpl {
+  interface GoalTypeImpl {
     id: ID!
     createdAt: DateTime
     updatedAt: DateTime
-    goalEntryDef: GoalEntryDef
+    goalType: GoalType
   }
 
   interface GoalEnterable {
@@ -17,29 +17,28 @@ export default `
     updatedAt: DateTime
   }
 
-  type GoalEntryDef {
+  type GoalType {
     id: ID!
     type: String
     friendlyName: String
     description: String
-    goalEntryDefs: [GoalEntryDefImpl]
     createdAt: DateTime
     updatedAt: DateTime
   }
 
-  type GoalEntryDefBool implements GoalEntryDefImpl {
+  type GoalTypeBool implements GoalTypeImpl {
     id: ID!
     createdAt: DateTime
     updatedAt: DateTime
-    goalEntryDef: GoalEntryDef
+    goalType: GoalType
   }
 
-  type GoalEntryDefInt implements GoalEntryDefImpl {
+  type GoalTypeInt implements GoalTypeImpl {
     id: ID!
     unit: String
     createdAt: DateTime
     updatedAt: DateTime
-    goalEntryDef: GoalEntryDef
+    goalType: GoalType
   }
 
   type GoalEntryBool implements GoalEnterable {
@@ -94,7 +93,7 @@ export default `
     public: Boolean
     user: User!
     goalEntries: [GoalEntry]
-    goalEntryDef: GoalEntryDefImpl
+    goalTypeImpl: GoalTypeImpl
     createdAt: DateTime
     updatedAt: DateTime
   }
@@ -103,7 +102,7 @@ export default `
     getUsers: [User] @isAuthenticated
     getGoals: [Goal] @isAuthenticated
     getGoal(id: ID!): Goal @isAuthenticated
-    getGoalEntryDefs: [GoalEntryDef] @isAuthenticated
+    getGoalTypes: [GoalType] @isAuthenticated
   }
 
   type Mutation {

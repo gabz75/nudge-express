@@ -10,9 +10,9 @@ const GET_GOALS = `
   query {
     getGoals {
       id
-      goalEntryDef {
+      goalTypeImpl {
         id
-        ... on GoalEntryDefInt {
+        ... on GoalTypeInt {
           unit
         }
       }
@@ -41,9 +41,9 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await dropModel('GoalEntryBool');
-  await dropModel('GoalEntryDefBool');
+  await dropModel('GoalTypeBool');
   await dropModel('GoalEntry');
-  await dropModel('GoalEntryDef');
+  await dropModel('GoalType');
   await dropModel('Goal');
   await dropModel('MoodReport');
   await dropModel('User');
@@ -58,7 +58,7 @@ describe('getGoals', () => {
 
     expect(getGoals).toBeType('array');
     expect(getGoals.length).toBe(1);
-    expect(goal.goalEntryDef).toBeDefined();
+    expect(goal.goalTypeImpl).toBeDefined();
     expect(goal.goalEntries).toBeType('array');
 
     const [goalEntry] = goal.goalEntries;

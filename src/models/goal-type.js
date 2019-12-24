@@ -1,10 +1,10 @@
 export default (sequelize, DataTypes) => {
-  const GoalEntryDef = sequelize.define('GoalEntryDef', {
+  const GoalType = sequelize.define('GoalType', {
     type: DataTypes.STRING,
     description: DataTypes.STRING,
     friendlyName: DataTypes.STRING,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   }, {});
-  return GoalEntryDef;
+  return GoalType;
 };
