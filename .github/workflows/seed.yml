@@ -31,6 +31,8 @@ jobs:
         yarn db:init
       env:
         NODE_ENV: test
-    - name: Run Jest
+    - name: Seed Database
       run:
-        yarn test:ci
+        yarn db:seed:all
+      env:
+        NODE_ENV: test
