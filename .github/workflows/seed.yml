@@ -29,6 +29,6 @@ jobs:
         NODE_ENV: test
     - name: Seed Database
       run:
-        yarn db:seed:all
+        yarn sequelize db:seed:all
       env:
         NODE_ENV: test
