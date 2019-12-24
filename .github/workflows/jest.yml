@@ -29,6 +29,8 @@ jobs:
     - name: Prepare Database
       run:
         yarn db:init
+      env:
+        NODE_ENV: test
     - name: Run Jest
       run:
         yarn test:ci
