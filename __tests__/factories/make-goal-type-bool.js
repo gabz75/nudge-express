@@ -1,6 +1,6 @@
 import db from '~/models';
 
-const makeGoalTypeBool = (args) => (
+export const makeGoalTypeBool = (args) => (
   db.sequelize.models.GoalTypeBool.create({
     ...args,
   })

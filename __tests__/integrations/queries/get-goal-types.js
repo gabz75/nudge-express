@@ -1,5 +1,4 @@
-import makeUser from 'tests/factories/user';
-import makeGoalType from 'tests/factories/goal-type';
+import { makeUser, makeGoalType } from 'tests/factories';
 import { setAuthenticatedUser } from 'tests/utils/apollo-server-context';
 import { useTestClient, db, dropModel } from 'tests/utils/use-test-client';
 

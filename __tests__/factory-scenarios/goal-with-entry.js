@@ -1,11 +1,13 @@
-import makeGoal from 'tests/factories/goal';
-import makeGoalEntry from 'tests/factories/goal-entry';
-import makeGoalEntryBool from 'tests/factories/goal-entry-bool';
-import makeGoalType from 'tests/factories/goal-type';
-import makeGoalTypeBool from 'tests/factories/goal-type-bool';
-import makeMoodReport from 'tests/factories/mood-report';
+import {
+  makeGoal,
+  makeGoalEntry,
+  makeGoalEntryBool,
+  makeGoalType,
+  makeGoalTypeBool,
+  makeMoodReport,
+} from 'tests/factories';
 
-const makeGoalWithEntry = async ({ user }) => {
+const scenarioGoalWithEntry = async ({ user }) => {
   const date = new Date();
   const goalType = await makeGoalType();
   const goalTypeBool = await makeGoalTypeBool({ GoalTypeId: goalType.id });
@@ -40,4 +42,4 @@ const makeGoalWithEntry = async ({ user }) => {
   };
 };
 
-export default makeGoalWithEntry;
+export default scenarioGoalWithEntry;

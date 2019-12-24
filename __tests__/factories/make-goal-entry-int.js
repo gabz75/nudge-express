@@ -2,7 +2,7 @@ import faker from 'faker';
 
 import db from '~/models';
 
-const makeGoalEntryInt = (args) => (
+export const makeGoalEntryInt = (args) => (
   db.sequelize.models.GoalEntryInt.create({
     value: faker.random.number(),
     date: new Date(),

@@ -13,7 +13,7 @@ const DATA = [
   },
 ];
 
-const makeGoalType = (args) => (
+export const makeGoalType = (args) => (
   db.sequelize.models.GoalType.create({
     type: DATA[0].type,
     friendlyName: DATA[0].friendlyName,
