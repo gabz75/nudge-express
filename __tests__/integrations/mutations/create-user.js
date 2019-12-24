@@ -1,4 +1,4 @@
-import makeUser from 'tests/factories/user';
+import { makeUser } from 'tests/factories';
 import { useTestClient, db, dropModel } from 'tests/utils/use-test-client';
 
 const { mutate } = useTestClient();

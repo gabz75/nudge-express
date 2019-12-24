@@ -1,5 +1,5 @@
-import makeGoalWithEntry from 'tests/factory-scenarios/goal-with-entry';
-import makeUser from 'tests/factories/user';
+import scenarioGoalWithEntry from 'tests/factory-scenarios/goal-with-entry';
+import { makeUser } from 'tests/factories';
 
 import { setAuthenticatedUser } from 'tests/utils/apollo-server-context';
 import { useTestClient, db, dropModel } from 'tests/utils/use-test-client';
@@ -34,7 +34,7 @@ const GET_GOALS = `
 beforeAll(async () => {
   const user = await makeUser();
 
-  await makeGoalWithEntry({ user });
+  await scenarioGoalWithEntry({ user });
 
   setAuthenticatedUser(user);
 });
