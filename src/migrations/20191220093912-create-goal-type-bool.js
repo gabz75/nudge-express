@@ -1,6 +1,6 @@
 export default {
   up: (queryInterface, Sequelize) => (
-    queryInterface.createTable('GoalEntryDefBools', {
+    queryInterface.createTable('GoalTypeBools', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -15,11 +15,11 @@ export default {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      goalEntryDefId: {
+      goalTypeId: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'GoalEntryDefs',
+            tableName: 'GoalTypes',
           },
           key: 'id',
         },
@@ -28,5 +28,5 @@ export default {
     })
   ),
 
-  down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('GoalEntryDefBools'),
+  down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('GoalTypeBools'),
 };

@@ -1,15 +1,15 @@
 import { GraphQLDateTime } from 'graphql-iso-date';
 
 export default {
-  GoalEntryDefImpl: {
+  GoalTypeImpl: {
     // eslint-disable-next-line no-underscore-dangle
-    __resolveType(goalEntryDef /* , context, info */) {
-      if (goalEntryDef.unit) {
-        return 'GoalEntryDefInt';
+    __resolveType(goalType /* , context, info */) {
+      if (goalType.unit) {
+        return 'GoalTypeInt';
       }
 
-      if (goalEntryDef) {
-        return 'GoalEntryDefBool';
+      if (goalType) {
+        return 'GoalTypeBool';
       }
 
       return null;
@@ -44,14 +44,11 @@ export default {
       return null;
     },
   },
-  GoalEntryDefBool: {
-    goalEntryDef: (parent /* , args, context, info */) => parent.getGoalEntryDef(),
+  GoalTypeBool: {
+    goalType: (parent /* , args, context, info */) => parent.getGoalType(),
   },
-  GoalEntryDefInt: {
-    goalEntryDef: (parent /* , args, context, info */) => parent.getGoalEntryDef(),
-  },
-  GoalEntryDef: {
-    goalEntryDefs: (parent /* , args, context, info */) => parent.getGoalEntryDefs(),
+  GoalTypeInt: {
+    goalType: (parent /* , args, context, info */) => parent.getGoalType(),
   },
   User: {
     goals: (parent /* , args, context, info */) => parent.getGoals(),
@@ -60,13 +57,13 @@ export default {
   Goal: {
     user: (parent /* , args, context, info */) => parent.getUser(),
     goalEntries: (parent /* , args, context, info */) => parent.getGoalEntries(),
-    goalEntryDef: (parent /* , args, context, info */) => {
-      if (parent.goalEntryDef === 'goalEntryDefInt') {
-        return parent.getGoalEntryDefInt();
+    goalTypeImpl: (parent /* , args, context, info */) => {
+      if (parent.goalType === 'GoalTypeInt') {
+        return parent.getGoalTypeInt();
       }
 
-      if (parent.goalEntryDef === 'goalEntryDefBool') {
-        return parent.getGoalEntryDefBool();
+      if (parent.goalType === 'GoalTypeBool') {
+        return parent.getGoalTypeBool();
       }
 
       return null;
@@ -80,7 +77,7 @@ export default {
     getGoal: (parent, { id }, { db, authenticatedUser } /* , info */) => (
       db.Goal.findOne({ where: { id, UserId: authenticatedUser.id } })
     ),
-    getGoalEntryDefs: (parent, args, { db } /* , info */) => db.GoalEntryDef.findAll(),
+    getGoalTypes: (parent, args, { db } /* , info */) => db.GoalType.findAll(),
   },
   Mutation: {
     createUser: (parent, args, context /* , info */) => {

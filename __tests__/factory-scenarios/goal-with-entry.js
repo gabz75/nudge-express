@@ -1,22 +1,22 @@
 import makeGoal from 'tests/factories/goal';
 import makeGoalEntry from 'tests/factories/goal-entry';
 import makeGoalEntryBool from 'tests/factories/goal-entry-bool';
-import makeGoalEntryDef from 'tests/factories/goal-entry-def';
-import makeGoalEntryDefBool from 'tests/factories/goal-entry-def-bool';
+import makeGoalType from 'tests/factories/goal-type';
+import makeGoalTypeBool from 'tests/factories/goal-type-bool';
 import makeMoodReport from 'tests/factories/mood-report';
 
 const makeGoalWithEntry = async ({ user }) => {
   const date = new Date();
-  const goalEntryDef = await makeGoalEntryDef(); // @todo associate with goalEntryDefBool.
-  const goalEntryDefBool = await makeGoalEntryDefBool({ GoalEntryDefId: goalEntryDef.id });
+  const goalType = await makeGoalType();
+  const goalTypeBool = await makeGoalTypeBool({ GoalTypeId: goalType.id });
   const moodReport = await makeMoodReport({
     UserId: user.id,
     date,
   });
   const goal = await makeGoal({
     UserId: user.id,
-    goalEntryDef: 'goalEntryBool',
-    goalEntryDefId: goalEntryDefBool.id,
+    goalType: 'GoalTypeBool',
+    goalTypeId: goalTypeBool.id,
   });
   const goalEntryBool = await makeGoalEntryBool({
     value: true,
@@ -34,8 +34,8 @@ const makeGoalWithEntry = async ({ user }) => {
     goal,
     goalEntry,
     goalEntryBool,
-    goalEntryDef,
-    goalEntryDefBool,
+    goalType,
+    goalTypeBool,
     moodReport,
   };
 };

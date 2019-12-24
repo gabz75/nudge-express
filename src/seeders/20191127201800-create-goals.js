@@ -1,12 +1,12 @@
 export default {
   up: async (queryInterface /* , Sequelize */) => {
     const [userRows] = await queryInterface.sequelize.query('SELECT id from Users;');
-    const [goalEntryDefBoolRows] = await queryInterface.sequelize.query('SELECT id from GoalEntryDefBools;');
-    const [goalEntryDefIntRows] = await queryInterface.sequelize.query('SELECT id from GoalEntryDefInts;');
+    const [goalTypeBoolRows] = await queryInterface.sequelize.query('SELECT id from GoalTypeBools;');
+    const [goalTypeIntRows] = await queryInterface.sequelize.query('SELECT id from GoalTypeInts;');
 
     const userId = userRows[0].id;
-    const goalEntryDefBoolId = goalEntryDefBoolRows[0].id;
-    const goalEntryDefIntId = goalEntryDefIntRows[0].id;
+    const goalTypeBoolId = goalTypeBoolRows[0].id;
+    const goalTypeIntId = goalTypeIntRows[0].id;
 
     await queryInterface.bulkInsert(
       'Goals', [
@@ -18,8 +18,8 @@ export default {
           createdAt: new Date(),
           updatedAt: new Date(),
           userId,
-          goalEntryDef: 'goalEntryDefInt',
-          goalEntryDefId: goalEntryDefIntId,
+          goalType: 'GoalTypeInt',
+          goalTypeId: goalTypeIntId,
         },
         {
           name: 'Read',
@@ -29,8 +29,8 @@ export default {
           createdAt: new Date(),
           updatedAt: new Date(),
           userId,
-          goalEntryDef: 'goalEntryDefBool',
-          goalEntryDefId: goalEntryDefBoolId,
+          goalType: 'GoalTypeBool',
+          goalTypeId: goalTypeBoolId,
         },
       ],
       {},
