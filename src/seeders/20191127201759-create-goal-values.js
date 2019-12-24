@@ -3,7 +3,7 @@ export default {
     const now = new Date();
 
     await queryInterface.bulkInsert(
-      'GoalEntryBools', [
+      'GoalValueBools', [
         {
           value: true,
           date: now,
@@ -15,7 +15,7 @@ export default {
     );
 
     await queryInterface.bulkInsert(
-      'GoalEntryInts', [
+      'GoalValueInts', [
         {
           value: 10,
           date: now,
@@ -28,7 +28,7 @@ export default {
   },
 
   down: (queryInterface /* , Sequelize */) => Promise.all([
-    queryInterface.bulkDelete('GoalEntryBools', null, {}),
-    queryInterface.bulkDelete('GoalEntryInts', null, {}),
+    queryInterface.bulkDelete('GoalValueBools', null, {}),
+    queryInterface.bulkDelete('GoalValueInts', null, {}),
   ]),
 };

@@ -43,8 +43,8 @@ export default {
   },
 
   down: (queryInterface /* , Sequelize */) => Promise.all([
-    queryInterface.bulkDelete('GoalTypes', null, {}),
     queryInterface.bulkDelete('GoalTypeBools', null, {}),
     queryInterface.bulkDelete('GoalTypeInts', null, {}),
+    queryInterface.bulkDelete('GoalTypes', null, {}),
   ]),
 };

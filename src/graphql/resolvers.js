@@ -15,30 +15,30 @@ export default {
       return null;
     },
   },
-  GoalEnterable: {
+  GoalValueImpl: {
     // eslint-disable-next-line no-underscore-dangle
-    __resolveType(goalEnterable /* , context, info */) {
-      if (typeof goalEnterable.value === 'boolean') {
-        return 'GoalEntryBool';
+    __resolveType(goalValue /* , context, info */) {
+      if (typeof goalValue.value === 'boolean') {
+        return 'GoalValueBool';
       }
 
-      if (goalEnterable) {
-        return 'GoalEntryInt';
+      if (goalValue) {
+        return 'GoalValueInt';
       }
 
       return null;
     },
   },
-  GoalEntry: {
+  GoalValue: {
     moodReport: (parent /* , args, context, info */) => parent.getMoodReport(),
     goal: (parent /* , args, context, info */) => parent.getGoal(),
-    entry: (parent /* , args, context, info */) => {
-      if (parent.goalEnterable === 'goalEntryInt') {
-        return parent.getGoalEntryInt();
+    value: (parent /* , args, context, info */) => {
+      if (parent.goalValue === 'GoalValueInt') {
+        return parent.getGoalValueInt();
       }
 
-      if (parent.goalEnterable === 'goalEntryBool') {
-        return parent.getGoalEntryBool();
+      if (parent.goalValue === 'GoalValueBool') {
+        return parent.getGoalValueBool();
       }
 
       return null;
@@ -56,7 +56,7 @@ export default {
   },
   Goal: {
     user: (parent /* , args, context, info */) => parent.getUser(),
-    goalEntries: (parent /* , args, context, info */) => parent.getGoalEntries(),
+    goalValues: (parent /* , args, context, info */) => parent.getGoalValues(),
     goalTypeImpl: (parent /* , args, context, info */) => {
       if (parent.goalType === 'GoalTypeInt') {
         return parent.getGoalTypeInt();

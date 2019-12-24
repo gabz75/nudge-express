@@ -1,13 +1,13 @@
 import {
   makeGoal,
-  makeGoalEntry,
-  makeGoalEntryBool,
+  makeGoalValue,
+  makeGoalValueBool,
   makeGoalType,
   makeGoalTypeBool,
   makeMoodReport,
 } from 'tests/factories';
 
-const scenarioGoalWithEntry = async ({ user }) => {
+const scenarioGoalWithValues = async ({ user }) => {
   const date = new Date();
   const goalType = await makeGoalType();
   const goalTypeBool = await makeGoalTypeBool({ GoalTypeId: goalType.id });
@@ -20,26 +20,26 @@ const scenarioGoalWithEntry = async ({ user }) => {
     goalType: 'GoalTypeBool',
     goalTypeId: goalTypeBool.id,
   });
-  const goalEntryBool = await makeGoalEntryBool({
+  const goalValueBool = await makeGoalValueBool({
     value: true,
     date,
   });
-  const goalEntry = await makeGoalEntry({
+  const goalValue = await makeGoalValue({
     GoalId: goal.id,
     MoodReportId: moodReport.id,
-    goalEnterable: 'goalEntryBool',
-    goalEnterableId: goalEntryBool.id,
+    goalValue: 'GoalValueBool',
+    goalValueId: goalValueBool.id,
     date,
   });
 
   return {
     goal,
-    goalEntry,
-    goalEntryBool,
+    goalValue,
+    goalValueBool,
     goalType,
     goalTypeBool,
     moodReport,
   };
 };
 
-export default scenarioGoalWithEntry;
+export default scenarioGoalWithValues;

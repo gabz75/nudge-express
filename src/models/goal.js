@@ -16,7 +16,7 @@ export default (sequelize, DataTypes) => {
   }, {});
   Goal.associate = function associate(models) {
     Goal.belongsTo(models.User);
-    Goal.hasMany(models.GoalEntry);
+    Goal.hasMany(models.GoalValue);
     Goal.belongsTo(models.GoalTypeBool, {
       foreignKey: 'goalTypeId',
       constraints: false,

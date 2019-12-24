@@ -11,7 +11,7 @@ export default `
     goalType: GoalType
   }
 
-  interface GoalEnterable {
+  interface GoalValueImpl {
     id: ID!
     createdAt: DateTime
     updatedAt: DateTime
@@ -41,18 +41,18 @@ export default `
     goalType: GoalType
   }
 
-  type GoalEntryBool implements GoalEnterable {
+  type GoalValueBool implements GoalValueImpl {
     id: ID!
     value: Boolean
-    goalEntry: GoalEntry
+    goalValue: GoalValue
     createdAt: DateTime
     updatedAt: DateTime
   }
 
-  type GoalEntryInt implements GoalEnterable {
+  type GoalValueInt implements GoalValueImpl {
     id: ID!
     value: Int
-    goalEntry: GoalEntry
+    goalValue: GoalValue
     createdAt: DateTime
     updatedAt: DateTime
   }
@@ -68,11 +68,11 @@ export default `
     updatedAt: DateTime
   }
 
-  type GoalEntry {
+  type GoalValue {
     id: ID!
     moodReport: MoodReport
     goal: Goal
-    entry: GoalEnterable
+    value: GoalValueImpl
   }
 
   type User {
@@ -92,7 +92,7 @@ export default `
     archived: Boolean
     public: Boolean
     user: User!
-    goalEntries: [GoalEntry]
+    goalValues: [GoalValue]
     goalTypeImpl: GoalTypeImpl
     createdAt: DateTime
     updatedAt: DateTime

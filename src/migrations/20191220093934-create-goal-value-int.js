@@ -1,6 +1,6 @@
 export default {
   up: (queryInterface, Sequelize) => (
-    queryInterface.createTable('GoalEntryBools', {
+    queryInterface.createTable('GoalValueInts', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -8,7 +8,7 @@ export default {
         type: Sequelize.INTEGER,
       },
       value: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       date: {
@@ -26,5 +26,5 @@ export default {
     })
   ),
 
-  down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('GoalEntryBools'),
+  down: (queryInterface /* , Sequelize */) => queryInterface.dropTable('GoalValueInts'),
 };

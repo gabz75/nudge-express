@@ -8,6 +8,9 @@ export default {
     const goalTypeBoolId = goalTypeBoolRows[0].id;
     const goalTypeIntId = goalTypeIntRows[0].id;
 
+    const createdAt = new Date();
+    const updatedAt = new Date();
+
     await queryInterface.bulkInsert(
       'Goals', [
         {
@@ -15,8 +18,8 @@ export default {
           color: '#dedede',
           archived: false,
           public: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt,
+          updatedAt,
           userId,
           goalType: 'GoalTypeInt',
           goalTypeId: goalTypeIntId,
@@ -26,8 +29,8 @@ export default {
           color: '#dedede',
           archived: false,
           public: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt,
+          updatedAt,
           userId,
           goalType: 'GoalTypeBool',
           goalTypeId: goalTypeBoolId,
@@ -38,32 +41,30 @@ export default {
 
     const [moodReportRows] = await queryInterface.sequelize.query('SELECT id from MoodReports;');
     const [goalRows] = await queryInterface.sequelize.query('SELECT id from Goals;');
-    const [goalEntryIntRows] = await queryInterface.sequelize.query('SELECT id from GoalEntryInts;');
-    const [goalEntryBoolRows] = await queryInterface.sequelize.query('SELECT id from GoalEntryBools;');
+    const [goalValueIntRows] = await queryInterface.sequelize.query('SELECT id from GoalValueInts;');
+    const [goalValueBoolRows] = await queryInterface.sequelize.query('SELECT id from GoalValueBools;');
 
     const moodReportId = moodReportRows[0].id;
-    const goalEntryIntId = goalEntryIntRows[0].id;
-    const goalEntryBoolId = goalEntryBoolRows[0].id;
+    const goalValueIntId = goalValueIntRows[0].id;
+    const goalValueBoolId = goalValueBoolRows[0].id;
 
     await queryInterface.bulkInsert(
-      'GoalEntries', [
+      'GoalValues', [
         {
           goalId: goalRows[0].id,
-          date: new Date(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt,
+          updatedAt,
           moodReportId,
-          goalEnterable: 'goalEntryInt',
-          goalEnterableId: goalEntryIntId,
+          goalValue: 'GoalValueInt',
+          goalValueId: goalValueIntId,
         },
         {
           goalId: goalRows[1].id,
-          date: new Date(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt,
+          updatedAt,
           moodReportId,
-          goalEnterable: 'goalEntryBool',
-          goalEnterableId: goalEntryBoolId,
+          goalValue: 'GoalValueBool',
+          goalValueId: goalValueBoolId,
         },
       ],
       {},
@@ -71,7 +72,7 @@ export default {
   },
 
   down: (queryInterface /* , Sequelize */) => Promise.all([
+    queryInterface.bulkDelete('GoalValues', null, {}),
     queryInterface.bulkDelete('Goals', null, {}),
-    queryInterface.bulkDelete('GoalEntries', null, {}),
   ]),
 };
