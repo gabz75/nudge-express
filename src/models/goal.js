@@ -10,9 +10,23 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    goalType: DataTypes.STRING,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   }, {});
   Goal.associate = function associate(models) {
     Goal.belongsTo(models.User);
+    Goal.hasMany(models.GoalValue);
+    Goal.belongsTo(models.GoalTypeBool, {
+      foreignKey: 'goalTypeId',
+      constraints: false,
+      as: 'goalTypeBool',
+    });
+    Goal.belongsTo(models.GoalTypeInt, {
+      foreignKey: 'goalTypeId',
+      constraints: false,
+      as: 'goalTypeInt',
+    });
   };
   return Goal;
 };

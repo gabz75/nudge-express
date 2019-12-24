@@ -2,7 +2,7 @@ import faker from 'faker';
 
 import db from '~/models';
 
-const makeGoal = (args) => (
+export const makeGoal = (args) => (
   db.sequelize.models.Goal.create({
     name: faker.lorem.word(),
     color: faker.internet.color(),

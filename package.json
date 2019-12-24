@@ -8,8 +8,9 @@
     "test": "./node_modules/jest/bin/jest.js --watchAll --runInBand",
     "test:ci": "./node_modules/jest/bin/jest.js --runInBand",
     "lint": "./node_modules/eslint/bin/eslint.js . -c .eslintrc.js",
-    "test:db:reset": "./bin/test-db-reset.js",
-    "test:db:init": "./bin/test-db-init.js"
+    "db:reset": "./bin/db-reset.js",
+    "db:init": "./bin/db-init.js",
+    "db:seed:reset": "./bin/db-seed-reset.js"
   },
   "dependencies": {
     "@babel/cli": "^7.7.4",

@@ -5,8 +5,6 @@
 const path = require('path');
 const { exec } = require('child_process');
 
-process.env.NODE_ENV = 'test';
-
 const sequelizeCliBin = path.join(__dirname, '..', 'node_modules', 'sequelize-cli', 'lib', 'sequelize');
 
 function execShellCommand(cmd) {
@@ -22,7 +20,6 @@ function execShellCommand(cmd) {
 }
 
 (async () => {
-  console.log(await execShellCommand(`${sequelizeCliBin} db:drop`));
-  console.log(await execShellCommand(`${sequelizeCliBin} db:create`));
-  console.log(await execShellCommand(`${sequelizeCliBin} db:migrate`));
+  console.log(await execShellCommand(`${sequelizeCliBin} db:seed:undo:all`));
+  console.log(await execShellCommand(`${sequelizeCliBin} db:seed:all`));
 })();
