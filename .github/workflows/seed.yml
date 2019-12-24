@@ -3,7 +3,7 @@ name: Node CI
 on: [push]
 
 jobs:
-  jest:
+  seed:
 
     runs-on: ubuntu-latest
 
