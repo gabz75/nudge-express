@@ -102,9 +102,32 @@ export default {
 
       return user;
     },
-    createGoal: (parent, args, { db, authenticatedUser } /* , info */) => (
-      db.Goal.create({ ...args, UserId: authenticatedUser.id })
-    ),
+    createGoalWithGoalTypeBool: async (parent, args, { db, authenticatedUser } /* , info */) => {
+      const goalType = await db.GoalType.findOne({ where: { type: 'GoalTypeBool' } });
+      const goalTypeBool = await db.GoalTypeBool.create({
+        GoalTypeId: goalType.id,
+      });
+      return db.Goal.create({
+        ...args,
+        UserId: authenticatedUser.id,
+        goalType: 'GoalTypeBool',
+        goalTypeId: goalTypeBool.id,
+      });
+    },
+    createGoalWithGoalTypeInt: async (parent, args, { db, authenticatedUser } /* , info */) => {
+      const { unit, ...otherArgs } = args;
+      const goalType = await db.GoalType.findOne({ where: { type: 'GoalTypeInt' } });
+      const goalTypeInt = await db.GoalTypeInt.create({
+        GoalTypeId: goalType.id,
+        unit,
+      });
+      return db.Goal.create({
+        ...otherArgs,
+        UserId: authenticatedUser.id,
+        goalType: 'GoalTypeInt',
+        goalTypeId: goalTypeInt.id,
+      });
+    },
     updateGoal: async (parent, args, { db, authenticatedUser } /* , info */) => {
       const { id, ...otherArgs } = args;
 

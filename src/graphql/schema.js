@@ -108,7 +108,8 @@ export default `
   type Mutation {
     createUser(email: String!, name: String!, password: String!): User
     login(email: String, password: String): User
-    createGoal(name: String!, color: String, public: Boolean): Goal @isAuthenticated
+    createGoalWithGoalTypeBool(name: String!, color: String, public: Boolean): Goal @isAuthenticated
+    createGoalWithGoalTypeInt(name: String!, color: String, public: Boolean, unit: String!): Goal @isAuthenticated
     updateGoal(id: ID!, name: String, color: String, archived: Boolean, public: Boolean): Goal @isAuthenticated
     deleteGoal(id: ID!): Goal @isAuthenticated
   }
