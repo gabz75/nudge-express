@@ -102,39 +102,57 @@ export default {
 
       return user;
     },
-    createGoalWithGoalTypeBool: async (parent, args, { db, authenticatedUser } /* , info */) => {
-      const goalType = await db.GoalType.findOne({ where: { type: 'GoalTypeBool' } });
-      const goalTypeBool = await db.GoalTypeBool.create({
-        GoalTypeId: goalType.id,
-      });
-      return db.Goal.create({
-        ...args,
-        UserId: authenticatedUser.id,
-        goalType: 'GoalTypeBool',
-        goalTypeId: goalTypeBool.id,
-      });
-    },
-    createGoalWithGoalTypeInt: async (parent, args, { db, authenticatedUser } /* , info */) => {
-      const { unit, ...otherArgs } = args;
-      const goalType = await db.GoalType.findOne({ where: { type: 'GoalTypeInt' } });
-      const goalTypeInt = await db.GoalTypeInt.create({
-        GoalTypeId: goalType.id,
+    createGoal: async (parent, args, { db, authenticatedUser } /* , info */) => {
+      const { goalType, unit, ...otherArgs } = args;
+      const GoalTypeModel = db[goalType]; // could be db.GoalTypeInt or db.GoalTypeBool
+      const goalTypeModel = await db.GoalType.findOne({ where: { type: goalType } });
+      const goalTypeInstance = await GoalTypeModel.create({
+        GoalTypeId: goalTypeModel.id,
         unit,
       });
       return db.Goal.create({
         ...otherArgs,
         UserId: authenticatedUser.id,
-        goalType: 'GoalTypeInt',
-        goalTypeId: goalTypeInt.id,
+        goalType,
+        goalTypeId: goalTypeInstance.id,
       });
     },
     updateGoal: async (parent, args, { db, authenticatedUser } /* , info */) => {
-      const { id, ...otherArgs } = args;
+      const {
+        id,
+        goalType,
+        unit,
+        ...otherArgs
+      } = args;
 
       const goal = await db.Goal.findOne({ where: { id, UserId: authenticatedUser.id } });
 
       if (!goal) {
         throw new Error('No goal found');
+      }
+
+      // janky
+      // @todo refactor resolvers in separate file that handles transaction
+      if (unit && goal.goalType === 'GoalTypeInt') {
+        const goalTypeInt = await goal.getGoalTypeInt();
+        await goalTypeInt.update({ unit });
+      }
+
+      // janky
+      // @todo refactor resolvers in separate file that handles transaction
+      if (goalType) {
+        const GoalTypeModel = db[goalType]; // could be db.GoalTypeInt or db.GoalTypeBool
+        const goalTypeModel = await db.GoalType.findOne({ where: { type: goalType } });
+        const goalTypeInstance = await GoalTypeModel.create({
+          GoalTypeId: goalTypeModel.id,
+          unit,
+        });
+
+        return goal.update({
+          ...otherArgs,
+          goalType,
+          goalTypeId: goalTypeInstance.id,
+        });
       }
 
       return goal.update(otherArgs);
