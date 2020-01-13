@@ -1,12 +1,38 @@
-import { makeUser, makeGoal, makeGoalType, makeGoalTypeInt } from 'tests/factories';
+import {
+  makeUser,
+  makeGoal,
+  makeGoalType,
+  makeGoalTypeInt,
+} from 'tests/factories';
 import { setAuthenticatedUser } from 'tests/utils/apollo-server-context';
 import { useTestClient, db, dropModel } from 'tests/utils/use-test-client';
 
 const { mutate } = useTestClient();
 
 const mutation = `
-  mutation($id: ID!, $name: String, $color: String, $public: Boolean, $archived: Boolean, $goalType: String, $unit: String) {
-    updateGoal(id: $id, name: $name, color: $color, public: $public, archived: $archived, goalType: $goalType, unit: $unit) {
+  mutation(
+    $id: ID!,
+    $name: String,
+    $color: String,
+    $public: Boolean,
+    $archived: Boolean,
+    $goalType: String,
+    $unit: String
+  ) {
+    updateGoal(
+      id: $id,
+      name:
+      $name,
+      color:
+      $color,
+      public:
+      $public,
+      archived:
+      $archived,
+      goalType:
+      $goalType,
+      unit: $unit
+    ) {
       id
       name
       color
@@ -36,10 +62,7 @@ beforeAll(async () => {
   const goalType = await makeGoalType({ type: 'goalTypeInt' });
   const goalTypeInt = await makeGoalTypeInt({ GoalTypeId: goalType.id, unit: 'Miles' });
 
-  goal = await db.sequelize.models.Goal.create({
-    name: 'Running',
-    color: '#d9d9d9',
-    public: true,
+  goal = await makeGoal({
     UserId: user.id,
     goalType: 'GoalTypeInt',
     goalTypeId: goalTypeInt.id,
