@@ -8,12 +8,12 @@ This is a prototype of a backend API using express, mysql and graphQL.
 
 # Context
 
-After 4 years of frontend development and many years of RoB backend development, I created this project to learn/experiment with GraphQL and how to structure codebase in an node environment. 
+This is a work in progress app to explore building an API within the node ecosystem and how it compares to my profesionnal experience building RoR APIs.
 
-Here is a non exhaustive list of things that I would like to improve:
-- Move the resolves into a service layer to handle more complicated use-cases for CRUDing resources
-- Improve factories for testing. At the moment I just drop tables at the end of each tests but ideally each tests should be wrapped into a transaction and automatically rollback every resources that have been created.
-- There are a couple of Polymorphic associations but they are more or less manually made Polymorphic: Investigate and cleanups!
-- Make the API production, remove any dev configurations, etc.
-- More than just integrations unit tests.
-- Document the database schema better.
+Here are few things that needs to be improve:
+- Move the resolvers into a service layer to handle more complicated use-cases for CRUDing resources.
+- Improve factories for testing. Currently dropping tables after each test file. Room for improvement and wrap each tests into a transaction to programmatically rollback resources that have been created.
+- Fix Polymorphic associations, too manual for now, either fix through sequelize or abstract the complexity somewhere else.
+- More tests.
+- Documentation on the schema.
+- Fix GraphQL performance issue with n+1 queries
