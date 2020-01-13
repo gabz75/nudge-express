@@ -5,8 +5,8 @@ import { useTestClient, db, dropModel } from 'tests/utils/use-test-client';
 const { mutate } = useTestClient();
 
 const mutation = `
-  mutation($name: String!, $color: String, $public: Boolean, $unit: String!) {
-    createGoalWithGoalTypeInt(name: $name, color: $color, public: $public, unit: $unit) {
+  mutation($name: String!, $color: String, $public: Boolean, $goalType: String!, $unit: String) {
+    createGoal(name: $name, color: $color, public: $public, goalType: $goalType, unit: $unit) {
       id
       name
       color
@@ -32,6 +32,7 @@ const variables = {
   name: 'Running',
   color: '#dedede',
   public: true,
+  goalType: 'GoalTypeInt',
   unit: 'Miles',
 };
 
@@ -50,28 +51,28 @@ afterAll(async () => {
   await db.sequelize.close();
 });
 
-describe('createGoalWithGoalTypeInt', () => {
+describe('createGoal', () => {
   it('returns a goal', async () => {
     const response = await mutate({ mutation, variables });
 
     expect(response.data).toBeDefined();
 
-    const { data: { createGoalWithGoalTypeInt } } = response;
+    const { data: { createGoal } } = response;
 
-    expect(createGoalWithGoalTypeInt).toBeTruthy();
-    expect(createGoalWithGoalTypeInt.id).toBeType('string');
-    expect(createGoalWithGoalTypeInt.name).toBe(variables.name);
-    expect(createGoalWithGoalTypeInt.color).toBe(variables.color);
-    expect(createGoalWithGoalTypeInt.public).toBe(variables.public);
-    expect(createGoalWithGoalTypeInt.archived).toBe(false);
-    expect(createGoalWithGoalTypeInt.createdAt).toBeType('string');
-    expect(createGoalWithGoalTypeInt.updatedAt).toBeType('string');
-    expect(createGoalWithGoalTypeInt.goalTypeImpl).toBeTruthy();
-    expect(createGoalWithGoalTypeInt.goalTypeImpl.id).toBeType('string');
-    expect(createGoalWithGoalTypeInt.goalTypeImpl.goalType).toBeTruthy();
-    expect(createGoalWithGoalTypeInt.goalTypeImpl.goalType.id).toBeType('string');
-    expect(createGoalWithGoalTypeInt.goalTypeImpl.goalType.type).toBe('GoalTypeInt');
-    expect(createGoalWithGoalTypeInt.goalTypeImpl.unit).toBe('Miles');
+    expect(createGoal).toBeTruthy();
+    expect(createGoal.id).toBeType('string');
+    expect(createGoal.name).toBe(variables.name);
+    expect(createGoal.color).toBe(variables.color);
+    expect(createGoal.public).toBe(variables.public);
+    expect(createGoal.archived).toBe(false);
+    expect(createGoal.createdAt).toBeType('string');
+    expect(createGoal.updatedAt).toBeType('string');
+    expect(createGoal.goalTypeImpl).toBeTruthy();
+    expect(createGoal.goalTypeImpl.id).toBeType('string');
+    expect(createGoal.goalTypeImpl.goalType).toBeTruthy();
+    expect(createGoal.goalTypeImpl.goalType.id).toBeType('string');
+    expect(createGoal.goalTypeImpl.goalType.type).toBe('GoalTypeInt');
+    expect(createGoal.goalTypeImpl.unit).toBe('Miles');
   });
 
   it('returns an error when name is missing', async () => {
@@ -80,9 +81,9 @@ describe('createGoalWithGoalTypeInt', () => {
     expect(errors).toBeTruthy();
   });
 
-  // it('returns an error when name is missing', async () => {
-  //   const { errors } = await mutate({ mutation, variables: { ...variables, name: undefined } });
+  it('returns an error when goalType is missing', async () => {
+    const { errors } = await mutate({ mutation, variables: { ...variables, goalType: undefined } });
 
-  //   expect(errors).toBeTruthy();
-  // });
+    expect(errors).toBeTruthy();
+  });
 });
