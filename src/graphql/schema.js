@@ -64,6 +64,7 @@ export default `
     feelings: String
     user: User
     date: DateTime
+    goalValues: [GoalValue]
     createdAt: DateTime
     updatedAt: DateTime
   }
@@ -105,6 +106,12 @@ export default `
     getGoalTypes: [GoalType] @isAuthenticated
   }
 
+  input GoalValueInput {
+    goalId: ID!,
+    booleanValue: Boolean,
+    intValue: Int
+  }
+
   type Mutation {
     createUser(email: String!, name: String!, password: String!): User
     login(email: String, password: String): User
@@ -119,6 +126,23 @@ export default `
       goalType: String,
       unit: String
     ): Goal @isAuthenticated
+
+    createMoodReport(
+      score: Int,
+      doing: String,
+      feelings: String,
+      date: DateTime,
+      goalValues: [GoalValueInput]
+    ): MoodReport @isAuthenticated
+
+    updateMoodReport(
+      id: ID!,
+      score: Int,
+      doing: String,
+      feelings: String,
+      date: DateTime,
+      goalValues: [GoalValueInput]
+    ): MoodReport @isAuthenticated
 
     deleteGoal(id: ID!): Goal @isAuthenticated
   }

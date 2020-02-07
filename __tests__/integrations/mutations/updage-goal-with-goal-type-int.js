@@ -59,7 +59,7 @@ let goal;
 beforeAll(async () => {
   await makeGoalType(); // creates GoalTypeBool
   const user = await makeUser();
-  const goalType = await makeGoalType({ type: 'goalTypeInt' });
+  const goalType = await makeGoalType({ type: 'GoalTypeInt' });
   const goalTypeInt = await makeGoalTypeInt({ GoalTypeId: goalType.id, unit: 'Miles' });
 
   goal = await makeGoal({

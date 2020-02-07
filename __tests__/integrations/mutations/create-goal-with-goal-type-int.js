@@ -38,7 +38,7 @@ const variables = {
 
 beforeAll(async () => {
   const user = await makeUser();
-  await makeGoalType({ type: 'goalTypeInt' });
+  await makeGoalType({ type: 'GoalTypeInt' });
 
   setAuthenticatedUser(user);
 });

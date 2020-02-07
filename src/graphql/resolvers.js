@@ -69,6 +69,9 @@ export default {
       return null;
     },
   },
+  MoodReport: {
+    goalValues: (parent /* , args, context, info */) => parent.getGoalValues(),
+  },
   Query: {
     getUsers: (parent, args, { db } /* , info */) => db.User.findAll(),
     getGoals: (parent, args, { db, authenticatedUser } /* , info */) => (
@@ -116,6 +119,51 @@ export default {
         goalType,
         goalTypeId: goalTypeInstance.id,
       });
+    },
+    createMoodReport: async (parent, args, { db, authenticatedUser } /* , info */) => {
+      const {
+        score, doing, feelings, date, goalValues,
+      } = args;
+
+      const moodReport = await db.MoodReport.create({
+        UserId: authenticatedUser.id,
+        score,
+        doing,
+        feelings,
+        date,
+      });
+
+      return Promise.all(goalValues.map(async ({ goalId, intValue, booleanValue }) => {
+        let goalValueConcrete;
+        let goalValueType;
+
+        if (intValue) {
+          goalValueConcrete = await db.GoalValueInt.create({
+            date,
+            value: intValue,
+          });
+          goalValueType = 'GoalValueInt';
+        }
+
+        if (booleanValue) {
+          goalValueConcrete = await db.GoalValueBool.create({
+            date,
+            value: booleanValue,
+          });
+          goalValueType = 'GoalValueBool';
+        }
+
+        if (!goalValueConcrete) {
+          throw new Error('error with goal value concrete');
+        }
+
+        await db.GoalValue.create({
+          MoodReportId: moodReport.id,
+          GoalId: goalId,
+          goalValueId: goalValueConcrete.id,
+          goalValue: goalValueType,
+        });
+      })).then(() => moodReport);
     },
     updateGoal: async (parent, args, { db, authenticatedUser } /* , info */) => {
       const {
