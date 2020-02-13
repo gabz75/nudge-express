@@ -74,13 +74,19 @@ export default {
   },
   Query: {
     getUsers: (parent, args, { db } /* , info */) => db.User.findAll(),
-    getGoals: (parent, args, { db, authenticatedUser } /* , info */) => (
-      db.Goal.findAll({ where: { UserId: authenticatedUser.id } })
-    ),
     getGoal: (parent, { id }, { db, authenticatedUser } /* , info */) => (
       db.Goal.findOne({ where: { id, UserId: authenticatedUser.id } })
     ),
+    getGoals: (parent, args, { db, authenticatedUser } /* , info */) => (
+      db.Goal.findAll({ where: { UserId: authenticatedUser.id } })
+    ),
     getGoalTypes: (parent, args, { db } /* , info */) => db.GoalType.findAll(),
+    getMoodReport: (parent, { id }, { db, authenticatedUser } /* , info */) => (
+      db.MoodReport.findOne({ where: { id, UserId: authenticatedUser.id } })
+    ),
+    getMoodReports: (parent, args, { db, authenticatedUser } /* , info */) => (
+      db.MoodReport.findAll({ where: { UserId: authenticatedUser.id } })
+    ),
   },
   Mutation: {
     createUser: (parent, args, context /* , info */) => {
@@ -133,7 +139,7 @@ export default {
         date,
       });
 
-      return Promise.all(goalValues.map(async ({ goalId, intValue, booleanValue }) => {
+      return Promise.all(goalValues.map(async ({ goalId, intValue, boolValue }) => {
         let goalValueConcrete;
         let goalValueType;
 
@@ -145,10 +151,10 @@ export default {
           goalValueType = 'GoalValueInt';
         }
 
-        if (booleanValue) {
+        if (boolValue) {
           goalValueConcrete = await db.GoalValueBool.create({
             date,
-            value: booleanValue,
+            value: boolValue,
           });
           goalValueType = 'GoalValueBool';
         }

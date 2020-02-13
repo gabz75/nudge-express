@@ -73,7 +73,7 @@ beforeAll(async () => {
     date: '2020-02-07T05:14:04.650Z',
     goalValues: [
       { goalId: goal1.id, intValue: 10 },
-      { goalId: goal2.id, booleanValue: true },
+      { goalId: goal2.id, boolValue: true },
     ],
   };
 

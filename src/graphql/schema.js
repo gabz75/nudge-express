@@ -104,11 +104,13 @@ export default `
     getGoals: [Goal] @isAuthenticated
     getGoal(id: ID!): Goal @isAuthenticated
     getGoalTypes: [GoalType] @isAuthenticated
+    getMoodReport(id: ID!): MoodReport @isAuthenticated
+    getMoodReports: [MoodReport] @isAuthenticated
   }
 
   input GoalValueInput {
     goalId: ID!,
-    booleanValue: Boolean,
+    boolValue: Boolean,
     intValue: Int
   }
 
