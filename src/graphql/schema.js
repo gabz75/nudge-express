@@ -11,12 +11,6 @@ export default `
     goalType: GoalType
   }
 
-  interface GoalValueImpl {
-    id: ID!
-    createdAt: DateTime
-    updatedAt: DateTime
-  }
-
   type GoalType {
     id: ID!
     type: String
@@ -41,22 +35,6 @@ export default `
     goalType: GoalType
   }
 
-  type GoalValueBool implements GoalValueImpl {
-    id: ID!
-    value: Boolean
-    goalValue: GoalValue
-    createdAt: DateTime
-    updatedAt: DateTime
-  }
-
-  type GoalValueInt implements GoalValueImpl {
-    id: ID!
-    value: Int
-    goalValue: GoalValue
-    createdAt: DateTime
-    updatedAt: DateTime
-  }
-
   type MoodReport {
     id: ID!
     score: Int
@@ -73,7 +51,10 @@ export default `
     id: ID!
     moodReport: MoodReport
     goal: Goal
-    value: GoalValueImpl
+    intValue: Int
+    stringValue: String
+    floatValue: Float
+    boolValue: Boolean
   }
 
   type User {
@@ -111,13 +92,30 @@ export default `
   input GoalValueInput {
     goalId: ID!,
     boolValue: Boolean,
-    intValue: Int
+    intValue: Int,
+    floatValue: Float,
+    stringValue: String
   }
 
   type Mutation {
-    createUser(email: String!, name: String!, password: String!): User
-    login(email: String, password: String): User
-    createGoal(name: String!, color: String, public: Boolean, goalType: String!, unit: String): Goal @isAuthenticated
+    createUser(
+      email: String!,
+      name: String!,
+      password: String!
+    ): User
+
+    login(
+      email: String,
+      password: String
+    ): User
+
+    createGoal(
+      name: String!,
+      color: String,
+      public: Boolean,
+      goalType: String!,
+      unit: String
+    ): Goal @isAuthenticated
 
     updateGoal(
       id: ID!,

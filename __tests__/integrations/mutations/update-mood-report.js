@@ -1,8 +1,10 @@
 import {
-  makeUser,
+  makeGoal,
   makeGoalType,
   makeGoalTypeInt,
-  makeGoal,
+  makeGoalValue,
+  makeMoodReport,
+  makeUser,
 } from 'tests/factories';
 import { setAuthenticatedUser } from 'tests/utils/apollo-server-context';
 import { useTestClient, db, dropModel } from 'tests/utils/use-test-client';
@@ -11,13 +13,15 @@ const { mutate } = useTestClient();
 
 const mutation = `
   mutation(
+    $id: ID!,
     $score: Int!,
     $doing: String!,
     $feelings: String!,
     $date: DateTime!,
     $goalValues: [GoalValueInput]
   ) {
-    createMoodReport(
+    updateMoodReport(
+      id: $id,
       score: $score,
       doing: $doing,
       feelings: $feelings,
@@ -60,15 +64,33 @@ beforeAll(async () => {
     goalType: 'GoalTypeBool',
     goalTypeId: goalTypeBool.id,
   });
+  const moodReport = await makeMoodReport({
+    UserId: user.id,
+    date: new Date(),
+    score: 10,
+    doing: 'I was doing this and that',
+    feelings: 'I was feeling this and that',
+  });
+  await makeGoalValue({
+    MoodReportId: moodReport.id,
+    GoalId: goal1.id,
+    intValue: 10,
+  });
+  await makeGoalValue({
+    MoodReportId: moodReport.id,
+    GoalId: goal2.id,
+    boolValue: true,
+  });
 
   variables = {
-    score: 10,
-    doing: 'I did this and that',
-    feelings: 'I feel this and that',
+    id: moodReport.id,
+    score: 9,
+    doing: 'I actually did this and that',
+    feelings: 'I actually feel this and that',
     date: '2020-02-07T05:14:04.650Z',
     goalValues: [
-      { goalId: goal1.id, intValue: 10 },
-      { goalId: goal2.id, boolValue: true },
+      { goalId: goal1.id, intValue: 5 },
+      { goalId: goal2.id, boolValue: false },
     ],
   };
 
@@ -86,25 +108,25 @@ afterAll(async () => {
   await db.sequelize.close();
 });
 
-describe('createMoodReport', () => {
+describe('updateMoodReport', () => {
   it('returns a MoodReport', async () => {
     const response = await mutate({ mutation, variables });
 
     expect(response.data).toBeDefined();
 
-    const { data: { createMoodReport } } = response;
+    const { data: { updateMoodReport } } = response;
 
-    expect(createMoodReport).toBeTruthy();
-    expect(createMoodReport.id).toBeType('string');
-    expect(createMoodReport.score).toBe(variables.score);
-    expect(createMoodReport.doing).toBe(variables.doing);
-    expect(createMoodReport.date).toBeType('string');
-    expect(createMoodReport.createdAt).toBeType('string');
-    expect(createMoodReport.updatedAt).toBeType('string');
-    expect(createMoodReport.goalValues).not.toHaveLength(0);
-    expect(createMoodReport.goalValues[0].id).toBeType('string');
-    expect(createMoodReport.goalValues[0].intValue).toBe(10);
-    expect(createMoodReport.goalValues[1].id).toBeType('string');
-    expect(createMoodReport.goalValues[1].boolValue).toBe(true);
+    expect(updateMoodReport).toBeTruthy();
+    expect(updateMoodReport.id).toBeType('string');
+    expect(updateMoodReport.score).toBe(variables.score);
+    expect(updateMoodReport.doing).toBe(variables.doing);
+    expect(updateMoodReport.date).toBeType('string');
+    expect(updateMoodReport.createdAt).toBeType('string');
+    expect(updateMoodReport.updatedAt).toBeType('string');
+    expect(updateMoodReport.goalValues).not.toHaveLength(0);
+    expect(updateMoodReport.goalValues[0].id).toBeType('string');
+    expect(updateMoodReport.goalValues[0].intValue).toBe(5);
+    expect(updateMoodReport.goalValues[1].id).toBeType('string');
+    expect(updateMoodReport.goalValues[1].boolValue).toBe(false);
   });
 });

@@ -15,34 +15,9 @@ export default {
       return null;
     },
   },
-  GoalValueImpl: {
-    // eslint-disable-next-line no-underscore-dangle
-    __resolveType(goalValue /* , context, info */) {
-      if (typeof goalValue.value === 'boolean') {
-        return 'GoalValueBool';
-      }
-
-      if (goalValue) {
-        return 'GoalValueInt';
-      }
-
-      return null;
-    },
-  },
   GoalValue: {
     moodReport: (parent /* , args, context, info */) => parent.getMoodReport(),
     goal: (parent /* , args, context, info */) => parent.getGoal(),
-    value: (parent /* , args, context, info */) => {
-      if (parent.goalValue === 'GoalValueInt') {
-        return parent.getGoalValueInt();
-      }
-
-      if (parent.goalValue === 'GoalValueBool') {
-        return parent.getGoalValueBool();
-      }
-
-      return null;
-    },
   },
   GoalTypeBool: {
     goalType: (parent /* , args, context, info */) => parent.getGoalType(),
@@ -57,17 +32,7 @@ export default {
   Goal: {
     user: (parent /* , args, context, info */) => parent.getUser(),
     goalValues: (parent /* , args, context, info */) => parent.getGoalValues(),
-    goalTypeImpl: (parent /* , args, context, info */) => {
-      if (parent.goalType === 'GoalTypeInt') {
-        return parent.getGoalTypeInt();
-      }
-
-      if (parent.goalType === 'GoalTypeBool') {
-        return parent.getGoalTypeBool();
-      }
-
-      return null;
-    },
+    goalTypeImpl: (parent /* , args, context, info */) => parent.getGoalType(),
   },
   MoodReport: {
     goalValues: (parent /* , args, context, info */) => parent.getGoalValues(),
@@ -139,35 +104,64 @@ export default {
         date,
       });
 
-      return Promise.all(goalValues.map(async ({ goalId, intValue, boolValue }) => {
-        let goalValueConcrete;
-        let goalValueType;
-
-        if (intValue) {
-          goalValueConcrete = await db.GoalValueInt.create({
-            date,
-            value: intValue,
-          });
-          goalValueType = 'GoalValueInt';
-        }
-
-        if (boolValue) {
-          goalValueConcrete = await db.GoalValueBool.create({
-            date,
-            value: boolValue,
-          });
-          goalValueType = 'GoalValueBool';
-        }
-
-        if (!goalValueConcrete) {
-          throw new Error('error with goal value concrete');
-        }
-
-        await db.GoalValue.create({
+      return Promise.all(goalValues.map(({
+        goalId,
+        intValue,
+        boolValue,
+        floatValue,
+        stringValue,
+      }) => (
+        db.GoalValue.create({
           MoodReportId: moodReport.id,
           GoalId: goalId,
-          goalValueId: goalValueConcrete.id,
-          goalValue: goalValueType,
+          intValue,
+          boolValue,
+          floatValue,
+          stringValue,
+        })
+      ))).then(() => moodReport);
+    },
+    updateMoodReport: async (parent, args, { db, authenticatedUser } /* , info */) => {
+      const {
+        id, score, doing, feelings, date, goalValues,
+      } = args;
+
+      const moodReport = await db.MoodReport.findOne({ where: { id, UserId: authenticatedUser.id } });
+
+      moodReport.update({
+        score,
+        doing,
+        feelings,
+        date,
+      });
+
+      if (!moodReport) {
+        throw new Error('No goal found');
+      }
+
+      return Promise.all(goalValues.map(async ({
+        goalId,
+        intValue,
+        boolValue,
+        floatValue,
+        stringValue,
+      }) => {
+        const goalValue = await db.GoalValue.findOne({
+          where: {
+            GoalId: goalId,
+            MoodReportId: moodReport.id,
+          },
+        });
+
+        if (!goalValue) {
+          throw new Error(`GoalValue not found for id ${goalId}`);
+        }
+
+        return goalValue.update({
+          intValue,
+          boolValue,
+          floatValue,
+          stringValue,
         });
       })).then(() => moodReport);
     },

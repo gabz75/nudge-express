@@ -28,5 +28,11 @@ export default (sequelize, DataTypes) => {
       as: 'goalTypeInt',
     });
   };
+
+  Goal.prototype.getGoalType = function getGoalType() {
+    const PolymorphicModel = sequelize.models[this.goalType];
+    return PolymorphicModel.findOne({ where: { id: this.goalTypeId } });
+  };
+
   return Goal;
 };

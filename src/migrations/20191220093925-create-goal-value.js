@@ -35,11 +35,17 @@ export default {
         },
         allowNull: false,
       },
-      goalValue: {
-        type: Sequelize.STRING,
-      },
-      goalValueId: {
+      intValue: {
         type: Sequelize.INTEGER,
+      },
+      floatValue: {
+        type: Sequelize.FLOAT,
+      },
+      boolValue: {
+        type: Sequelize.BOOLEAN,
+      },
+      stringValue: {
+        type: Sequelize.STRING,
       },
     })
   ),

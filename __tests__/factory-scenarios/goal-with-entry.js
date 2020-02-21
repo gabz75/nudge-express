@@ -1,7 +1,6 @@
 import {
   makeGoal,
   makeGoalValue,
-  makeGoalValueBool,
   makeGoalType,
   makeGoalTypeBool,
   makeMoodReport,
@@ -20,22 +19,15 @@ const scenarioGoalWithValues = async ({ user }) => {
     goalType: 'GoalTypeBool',
     goalTypeId: goalTypeBool.id,
   });
-  const goalValueBool = await makeGoalValueBool({
-    value: true,
-    date,
-  });
   const goalValue = await makeGoalValue({
     GoalId: goal.id,
     MoodReportId: moodReport.id,
-    goalValue: 'GoalValueBool',
-    goalValueId: goalValueBool.id,
-    date,
+    boolValue: true,
   });
 
   return {
     goal,
     goalValue,
-    goalValueBool,
     goalType,
     goalTypeBool,
     moodReport,
