@@ -1,5 +1,7 @@
 import { GraphQLDateTime } from 'graphql-iso-date';
 
+import createUser from '~/services/resolvers/mutations/create-user';
+
 export default {
   GoalTypeImpl: {
     // eslint-disable-next-line no-underscore-dangle
@@ -54,12 +56,7 @@ export default {
     ),
   },
   Mutation: {
-    createUser: (parent, args, context /* , info */) => {
-      const { db } = context;
-      context.ignorePrivateFieldDirective = true;
-
-      return db.User.create(args);
-    },
+    createUser,
     login: async (parent, args, context /* , info */) => {
       const { db } = context;
       const user = await db.User.findOne({ where: { email: args.email } });
