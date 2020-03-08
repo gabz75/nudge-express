@@ -11,12 +11,6 @@ export default `
     goalType: GoalType
   }
 
-  interface GoalValueImpl {
-    id: ID!
-    createdAt: DateTime
-    updatedAt: DateTime
-  }
-
   type GoalType {
     id: ID!
     type: String
@@ -41,22 +35,6 @@ export default `
     goalType: GoalType
   }
 
-  type GoalValueBool implements GoalValueImpl {
-    id: ID!
-    value: Boolean
-    goalValue: GoalValue
-    createdAt: DateTime
-    updatedAt: DateTime
-  }
-
-  type GoalValueInt implements GoalValueImpl {
-    id: ID!
-    value: Int
-    goalValue: GoalValue
-    createdAt: DateTime
-    updatedAt: DateTime
-  }
-
   type MoodReport {
     id: ID!
     score: Int
@@ -64,6 +42,7 @@ export default `
     feelings: String
     user: User
     date: DateTime
+    goalValues: [GoalValue]
     createdAt: DateTime
     updatedAt: DateTime
   }
@@ -72,7 +51,10 @@ export default `
     id: ID!
     moodReport: MoodReport
     goal: Goal
-    value: GoalValueImpl
+    intValue: Int
+    stringValue: String
+    floatValue: Float
+    boolValue: Boolean
   }
 
   type User {
@@ -103,12 +85,37 @@ export default `
     getGoals: [Goal] @isAuthenticated
     getGoal(id: ID!): Goal @isAuthenticated
     getGoalTypes: [GoalType] @isAuthenticated
+    getMoodReport(id: ID!): MoodReport @isAuthenticated
+    getMoodReports: [MoodReport] @isAuthenticated
+  }
+
+  input GoalValueInput {
+    goalId: ID!,
+    boolValue: Boolean,
+    intValue: Int,
+    floatValue: Float,
+    stringValue: String
   }
 
   type Mutation {
-    createUser(email: String!, name: String!, password: String!): User
-    login(email: String, password: String): User
-    createGoal(name: String!, color: String, public: Boolean, goalType: String!, unit: String): Goal @isAuthenticated
+    createUser(
+      email: String!,
+      name: String!,
+      password: String!
+    ): User
+
+    login(
+      email: String,
+      password: String
+    ): User
+
+    createGoal(
+      name: String!,
+      color: String,
+      public: Boolean,
+      goalType: String!,
+      unit: String
+    ): Goal @isAuthenticated
 
     updateGoal(
       id: ID!,
@@ -119,6 +126,23 @@ export default `
       goalType: String,
       unit: String
     ): Goal @isAuthenticated
+
+    createMoodReport(
+      score: Int,
+      doing: String,
+      feelings: String,
+      date: DateTime,
+      goalValues: [GoalValueInput]
+    ): MoodReport @isAuthenticated
+
+    updateMoodReport(
+      id: ID!,
+      score: Int,
+      doing: String,
+      feelings: String,
+      date: DateTime,
+      goalValues: [GoalValueInput]
+    ): MoodReport @isAuthenticated
 
     deleteGoal(id: ID!): Goal @isAuthenticated
   }

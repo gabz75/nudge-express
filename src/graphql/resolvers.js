@@ -1,5 +1,9 @@
 import { GraphQLDateTime } from 'graphql-iso-date';
 
+import withResponse from '~/services/with-response';
+import createUser from '~/services/resolvers/mutations/create-user';
+import login from '~/services/resolvers/mutations/login';
+
 export default {
   GoalTypeImpl: {
     // eslint-disable-next-line no-underscore-dangle
@@ -15,34 +19,9 @@ export default {
       return null;
     },
   },
-  GoalValueImpl: {
-    // eslint-disable-next-line no-underscore-dangle
-    __resolveType(goalValue /* , context, info */) {
-      if (typeof goalValue.value === 'boolean') {
-        return 'GoalValueBool';
-      }
-
-      if (goalValue) {
-        return 'GoalValueInt';
-      }
-
-      return null;
-    },
-  },
   GoalValue: {
     moodReport: (parent /* , args, context, info */) => parent.getMoodReport(),
     goal: (parent /* , args, context, info */) => parent.getGoal(),
-    value: (parent /* , args, context, info */) => {
-      if (parent.goalValue === 'GoalValueInt') {
-        return parent.getGoalValueInt();
-      }
-
-      if (parent.goalValue === 'GoalValueBool') {
-        return parent.getGoalValueBool();
-      }
-
-      return null;
-    },
   },
   GoalTypeBool: {
     goalType: (parent /* , args, context, info */) => parent.getGoalType(),
@@ -57,51 +36,30 @@ export default {
   Goal: {
     user: (parent /* , args, context, info */) => parent.getUser(),
     goalValues: (parent /* , args, context, info */) => parent.getGoalValues(),
-    goalTypeImpl: (parent /* , args, context, info */) => {
-      if (parent.goalType === 'GoalTypeInt') {
-        return parent.getGoalTypeInt();
-      }
-
-      if (parent.goalType === 'GoalTypeBool') {
-        return parent.getGoalTypeBool();
-      }
-
-      return null;
-    },
+    goalTypeImpl: (parent /* , args, context, info */) => parent.getGoalType(),
+  },
+  MoodReport: {
+    goalValues: (parent /* , args, context, info */) => parent.getGoalValues(),
   },
   Query: {
     getUsers: (parent, args, { db } /* , info */) => db.User.findAll(),
-    getGoals: (parent, args, { db, authenticatedUser } /* , info */) => (
-      db.Goal.findAll({ where: { UserId: authenticatedUser.id } })
-    ),
     getGoal: (parent, { id }, { db, authenticatedUser } /* , info */) => (
       db.Goal.findOne({ where: { id, UserId: authenticatedUser.id } })
     ),
+    getGoals: (parent, args, { db, authenticatedUser } /* , info */) => (
+      db.Goal.findAll({ where: { UserId: authenticatedUser.id } })
+    ),
     getGoalTypes: (parent, args, { db } /* , info */) => db.GoalType.findAll(),
+    getMoodReport: (parent, { id }, { db, authenticatedUser } /* , info */) => (
+      db.MoodReport.findOne({ where: { id, UserId: authenticatedUser.id } })
+    ),
+    getMoodReports: (parent, args, { db, authenticatedUser } /* , info */) => (
+      db.MoodReport.findAll({ where: { UserId: authenticatedUser.id } })
+    ),
   },
   Mutation: {
-    createUser: (parent, args, context /* , info */) => {
-      const { db } = context;
-      context.ignorePrivateFieldDirective = true;
-
-      return db.User.create(args);
-    },
-    login: async (parent, args, context /* , info */) => {
-      const { db } = context;
-      const user = await db.User.findOne({ where: { email: args.email } });
-
-      if (!user) {
-        throw new Error('no user found');
-      }
-
-      if (!user.verifyPassword(args.password)) {
-        throw new Error('invalid password');
-      }
-
-      context.ignorePrivateFieldDirective = true;
-
-      return user;
-    },
+    createUser: withResponse(createUser),
+    login: withResponse(login),
     createGoal: async (parent, args, { db, authenticatedUser } /* , info */) => {
       const { goalType, unit, ...otherArgs } = args;
       const GoalTypeModel = db[goalType]; // could be db.GoalTypeInt or db.GoalTypeBool
@@ -116,6 +74,80 @@ export default {
         goalType,
         goalTypeId: goalTypeInstance.id,
       });
+    },
+    createMoodReport: async (parent, args, { db, authenticatedUser } /* , info */) => {
+      const {
+        score, doing, feelings, date, goalValues,
+      } = args;
+
+      const moodReport = await db.MoodReport.create({
+        UserId: authenticatedUser.id,
+        score,
+        doing,
+        feelings,
+        date,
+      });
+
+      return Promise.all(goalValues.map(({
+        goalId,
+        intValue,
+        boolValue,
+        floatValue,
+        stringValue,
+      }) => (
+        db.GoalValue.create({
+          MoodReportId: moodReport.id,
+          GoalId: goalId,
+          intValue,
+          boolValue,
+          floatValue,
+          stringValue,
+        })
+      ))).then(() => moodReport);
+    },
+    updateMoodReport: async (parent, args, { db, authenticatedUser } /* , info */) => {
+      const {
+        id, score, doing, feelings, date, goalValues,
+      } = args;
+
+      const moodReport = await db.MoodReport.findOne({ where: { id, UserId: authenticatedUser.id } });
+
+      moodReport.update({
+        score,
+        doing,
+        feelings,
+        date,
+      });
+
+      if (!moodReport) {
+        throw new Error('No goal found');
+      }
+
+      return Promise.all(goalValues.map(async ({
+        goalId,
+        intValue,
+        boolValue,
+        floatValue,
+        stringValue,
+      }) => {
+        const goalValue = await db.GoalValue.findOne({
+          where: {
+            GoalId: goalId,
+            MoodReportId: moodReport.id,
+          },
+        });
+
+        if (!goalValue) {
+          throw new Error(`GoalValue not found for id ${goalId}`);
+        }
+
+        return goalValue.update({
+          intValue,
+          boolValue,
+          floatValue,
+          stringValue,
+        });
+      })).then(() => moodReport);
     },
     updateGoal: async (parent, args, { db, authenticatedUser } /* , info */) => {
       const {

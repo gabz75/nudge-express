@@ -9,6 +9,7 @@ export default (sequelize, DataTypes) => {
   }, {});
   MoodReport.associate = function associate(models) {
     MoodReport.belongsTo(models.User);
+    MoodReport.hasMany(models.GoalValue);
   };
   return MoodReport;
 };

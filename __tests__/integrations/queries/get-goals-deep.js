@@ -17,15 +17,9 @@ const GET_GOALS = `
         }
       }
       goalValues {
-        value {
-          id
-          ... on GoalValueInt {
-            intValue: value
-          }
-          ... on GoalValueBool {
-            boolValue: value
-          }
-        }
+        id
+        intValue
+        boolValue
       }
     }
   }
@@ -40,7 +34,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await dropModel('GoalValueBool');
   await dropModel('GoalTypeBool');
   await dropModel('GoalValue');
   await dropModel('GoalType');
@@ -63,7 +56,7 @@ describe('getGoals', () => {
 
     const [goalValue] = goal.goalValues;
     expect(goalValue).toBeDefined();
-    expect(goalValue.value).toBeDefined();
-    expect(goalValue.value.boolValue).toBeType('boolean');
+    expect(goalValue.id).toBeType('string');
+    expect(goalValue.boolValue).toBeType('boolean');
   });
 });

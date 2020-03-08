@@ -41,12 +41,8 @@ export default {
 
     const [moodReportRows] = await queryInterface.sequelize.query('SELECT id from MoodReports;');
     const [goalRows] = await queryInterface.sequelize.query('SELECT id from Goals;');
-    const [goalValueIntRows] = await queryInterface.sequelize.query('SELECT id from GoalValueInts;');
-    const [goalValueBoolRows] = await queryInterface.sequelize.query('SELECT id from GoalValueBools;');
 
     const moodReportId = moodReportRows[0].id;
-    const goalValueIntId = goalValueIntRows[0].id;
-    const goalValueBoolId = goalValueBoolRows[0].id;
 
     await queryInterface.bulkInsert(
       'GoalValues', [
@@ -55,16 +51,14 @@ export default {
           createdAt,
           updatedAt,
           moodReportId,
-          goalValue: 'GoalValueInt',
-          goalValueId: goalValueIntId,
+          intValue: 10,
         },
         {
           goalId: goalRows[1].id,
           createdAt,
           updatedAt,
           moodReportId,
-          goalValue: 'GoalValueBool',
-          goalValueId: goalValueBoolId,
+          boolValue: true,
         },
       ],
       {},
