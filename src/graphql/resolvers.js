@@ -1,6 +1,8 @@
 import { GraphQLDateTime } from 'graphql-iso-date';
 
+import withResponse from '~/services/with-response';
 import createUser from '~/services/resolvers/mutations/create-user';
+import login from '~/services/resolvers/mutations/login';
 
 export default {
   GoalTypeImpl: {
@@ -56,23 +58,8 @@ export default {
     ),
   },
   Mutation: {
-    createUser,
-    login: async (parent, args, context /* , info */) => {
-      const { db } = context;
-      const user = await db.User.findOne({ where: { email: args.email } });
-
-      if (!user) {
-        throw new Error('no user found');
-      }
-
-      if (!user.verifyPassword(args.password)) {
-        throw new Error('invalid password');
-      }
-
-      context.ignorePrivateFieldDirective = true;
-
-      return user;
-    },
+    createUser: withResponse(createUser),
+    login: withResponse(login),
     createGoal: async (parent, args, { db, authenticatedUser } /* , info */) => {
       const { goalType, unit, ...otherArgs } = args;
       const GoalTypeModel = db[goalType]; // could be db.GoalTypeInt or db.GoalTypeBool

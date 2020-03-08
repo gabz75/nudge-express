@@ -11,7 +11,7 @@ let parent;
 let context;
 let info;
 
-const callback = (parent, args) => args.number + 1;
+const callback = (_, args) => args.number + 1;
 const callbackWrappedWithValidations = withValidations(callback, validationSchema);
 
 describe('withValidations', () => {

@@ -21,11 +21,26 @@ export default class Response {
   }
 
   static withValidationError(validationError) {
-    return new Response({ pending: false, success: false, errors: validationError.errors });
+    return new Response({ success: false, pending: false, errors: validationError.errors });
   }
 
-  constructor({ promise = null, errors = null, pending = false, success = null }) {
-    this.data = null;
+  static withData(data) {
+    return new Response({ success: true, pending: false, data });
+  }
+
+  static withError(error) {
+    return new Response({ success: false, pending: false, errors: [error] });
+  }
+
+  constructor({
+    promise = null,
+    data = null,
+    errors = null,
+    pending = false,
+    success = null,
+  }) {
+    this.promise = promise;
+    this.data = data;
     this.errors = errors;
     this.pending = pending;
     this.success = success;

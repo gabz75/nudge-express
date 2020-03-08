@@ -1,13 +1,13 @@
-import createUser from '~/services/resolvers/mutations/create-user';
 import { db, dropModel } from 'tests/utils/use-test-client';
 
+import createUser from '~/services/resolvers/mutations/create-user';
+
 let parent;
-let args;
-let context = { db };
+const context = { db };
 let info;
 
 describe('createUser', () => {
-  beforeEach(async () => {
+  afterAll(async () => {
     await dropModel('User');
   });
 

@@ -1,4 +1,4 @@
-import Response from  '~/services/response';
+import Response from '~/services/response';
 
 async function validateAndResolve(callback, validationSchema, parent, args, context, info) {
   try {
@@ -12,8 +12,8 @@ async function validateAndResolve(callback, validationSchema, parent, args, cont
 
     return error;
   }
-};
+}
 
 export default function withValidations(callback, validationSchema) {
-  return validateAndResolve.bind(null, callback, validationSchema)
+  return validateAndResolve.bind(null, callback, validationSchema);
 }
